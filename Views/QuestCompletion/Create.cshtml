@@ -1,0 +1,320 @@
+﻿@using SideQuestApp.Models
+
+@{
+ViewData["Title"] = "Submit a Quest";
+}
+
+<div class="sq-submit-page">
+
+
+<div class="sq-submit-header">
+
+    <a asp-controller="Quest"
+       asp-action="Index"
+       class="sq-back-link">
+        Back to quests
+    </a>
+
+    <br />
+
+    <a asp-action="MyCompletions"
+       class="sq-back-link">
+        <strong>My completions</strong>
+    </a>
+
+
+    <div class="sq-section-eyebrow">
+        QUEST COMPLETION
+    </div>
+
+    <h1>
+        Prove you did it.
+    </h1>
+
+    <p>
+        Complete the quest in real life, upload your proof,
+        and send it for review.
+    </p>
+
+</div>
+
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="sq-submit-error">
+
+        <div class="sq-section-eyebrow">
+            SOMETHING WENT WRONG
+        </div>
+
+        @Html.ValidationSummary(false)
+
+    </div>
+}
+
+
+<div class="sq-submit-layout">
+
+    <main class="sq-submit-card">
+
+        <div class="sq-submit-card-header">
+
+            <div>
+
+                <span class="sq-submit-label">
+                    SUBMIT COMPLETION
+                </span>
+
+                <h2>
+                    Show us the proof.
+                </h2>
+
+            </div>
+
+            <div class="sq-submit-mark">
+                <span>+</span>
+            </div>
+
+        </div>
+
+
+        <form asp-action="Create"
+              method="post"
+              enctype="multipart/form-data"
+              class="sq-submit-form">
+
+            @Html.AntiForgeryToken()
+
+
+            <!-- QUEST -->
+
+            <div class="sq-submit-field">
+
+                <label for="questId">
+                    Quest
+                </label>
+
+                <p class="sq-submit-help">
+                    Choose the quest you completed.
+                </p>
+
+                <select name="questId"
+                        id="questId"
+                        class="sq-submit-select"
+                        asp-items="ViewBag.QuestId"
+                        required>
+                </select>
+
+            </div>
+
+
+            <!-- PHOTO -->
+
+            <div class="sq-submit-field">
+
+                <label for="photo">
+                    Photo proof
+                </label>
+
+                <p class="sq-submit-help">
+                    Upload a photo that proves you completed the quest.
+                </p>
+
+
+                <label for="photo"
+                       class="sq-upload-box">
+
+                    <div class="sq-upload-icon">
+                        +
+                    </div>
+
+                    <div class="sq-upload-content">
+
+                        <strong id="sq-file-name">
+                            Choose a photo
+                        </strong>
+
+                        <span id="sq-file-hint">
+                            JPG, JPEG, PNG or WEBP · max 10 MB
+                        </span>
+
+                    </div>
+
+                    <span class="sq-upload-action">
+                        Browse
+                    </span>
+
+                </label>
+
+
+                <input type="file"
+                       name="photo"
+                       id="photo"
+                       accept=".jpg,.jpeg,.png,.webp"
+                       required
+                       class="sq-upload-input" />
+
+            </div>
+
+
+            <!-- CAPTION -->
+
+            <div class="sq-submit-field">
+
+                <label for="caption">
+
+                    Caption
+
+                    <span class="sq-optional">
+                        Optional
+                    </span>
+
+                </label>
+
+                <p class="sq-submit-help">
+                    Add a short note about your completion.
+                </p>
+
+                <textarea name="caption"
+                          id="caption"
+                          class="sq-submit-textarea"
+                          maxlength="500"
+                          rows="4"
+                          placeholder="Tell us a little about the moment..."></textarea>
+                
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="sq-submit-actions">
+
+                <a asp-action="MyCompletions"
+                   class="sq-submit-cancel">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="sq-submit-button">
+                    Submit Quest
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+
+    <!-- SIDE INFO -->
+
+    <aside class="sq-submit-sidebar">
+
+        <div class="sq-submit-info-card">
+
+            <div class="sq-section-eyebrow">
+                HOW IT WORKS
+            </div>
+
+
+            <div class="sq-submit-steps">
+
+                <div class="sq-submit-step">
+
+                    <span>01</span>
+
+                    <div>
+
+                        <strong>
+                            Complete it
+                        </strong>
+
+                        <p>
+                            Do the quest in real life.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sq-submit-step">
+
+                    <span>02</span>
+
+                    <div>
+
+                        <strong>
+                            Capture it
+                        </strong>
+
+                        <p>
+                            Take a photo as proof.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sq-submit-step">
+
+                    <span>03</span>
+
+                    <div>
+
+                        <strong>
+                            Submit it
+                        </strong>
+
+                        <p>
+                            Send your completion for review.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sq-submit-step">
+
+                    <span>04</span>
+
+                    <div>
+
+                        <strong>
+                            Level up
+                        </strong>
+
+                        <p>
+                            Get approved and earn your points.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="sq-submit-note">
+
+            <div class="sq-section-eyebrow">
+                REMEMBER
+            </div>
+
+            <p>
+                Your photo should clearly show that the quest
+                was completed. Authentic moments make the best proof.
+            </p>
+
+        </div>
+
+    </aside>
+
+</div>
+
+</div>

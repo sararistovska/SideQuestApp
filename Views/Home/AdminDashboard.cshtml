@@ -1,0 +1,137 @@
+﻿@using SideQuestApp.Models
+
+@{
+    var recentActivity =
+        ViewBag.RecentActivity as List<QuestCompletion>
+        ?? new List<QuestCompletion>();
+}
+
+<section class="sq-dashboard">
+
+    <div class="sq-dashboard-header">
+
+        <div>
+
+            <p class="sq-label">
+                ADMINISTRATION
+            </p>
+
+            <h1>
+                SideQuest control room.
+            </h1>
+
+            <p>
+                Manage the community, quests and submitted activity.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="sq-admin-stats">
+
+        <div class="sq-admin-stat-card">
+            <span>Pending submissions</span>
+            <strong>@(ViewBag.PendingCount ?? 0)</strong>
+        </div>
+
+        <div class="sq-admin-stat-card">
+            <span>Users</span>
+            <strong>@(ViewBag.TotalUsers ?? 0)</strong>
+        </div>
+
+        <div class="sq-admin-stat-card">
+            <span>Quests</span>
+            <strong>@(ViewBag.TotalQuests ?? 0)</strong>
+        </div>
+
+        <div class="sq-admin-stat-card">
+            <span>Approved completions</span>
+            <strong>@(ViewBag.TotalApproved ?? 0)</strong>
+        </div>
+
+    </div>
+
+
+    <div class="sq-admin-columns">
+
+        <section class="sq-dashboard-card">
+
+            <div class="sq-card-header">
+
+                <div>
+                    <p class="sq-label">MANAGEMENT</p>
+                    <h2>Admin tools</h2>
+                </div>
+
+            </div>
+
+            <div class="sq-admin-actions">
+
+                <a asp-controller="QuestCompletion"
+                   asp-action="Pending">
+
+                    <strong>
+                        Review submissions
+                    </strong>
+
+                    <span>
+                        Approve or reject submitted quest proof.
+                    </span>
+
+                </a>
+
+                <a asp-controller="Quest"
+                   asp-action="Index">
+
+                    <strong>
+                        Manage quests
+                    </strong>
+
+                    <span>
+                        Create and manage SideQuests.
+                    </span>
+
+                </a>
+
+                <a asp-controller="Leaderboard"
+                   asp-action="Index">
+
+                    <strong>
+                        Leaderboard
+                    </strong>
+                    
+
+                </a>
+                
+                <a asp-controller="Badge"
+                   asp-action="Index">
+                    <strong>Badges</strong>
+                    <span>Create and manage achievements</span>
+                </a>
+                
+                
+
+                <a asp-controller="Feed"
+                   asp-action="Index">
+
+                    <strong>
+                        Community activity
+                    </strong>
+
+                    <span>
+                        View approved quest submissions.
+                    </span>
+
+                </a>
+                
+
+            </div>
+
+        </section>
+        
+
+    </div>
+
+</section>

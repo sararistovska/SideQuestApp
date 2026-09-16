@@ -1,0 +1,677 @@
+﻿
+.sq-friends-page {
+    width: min(1100px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 65px 0 110px;
+}
+
+/* header */
+
+.sq-friends-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 55px;
+}
+
+.sq-friends-header h1 {
+    margin: 0;
+    color: var(--color-text);
+    font-family: "Outfit", serif;
+    font-size: clamp(48px, 7vw, 76px);
+    font-weight: 500;
+    line-height: .9;
+}
+
+.sq-friends-header p {
+    max-width: 520px;
+    margin: 18px 0 0;
+    color: color-mix(in srgb, var(--color-text) 53%, transparent);
+    font-size: 13px;
+    line-height: 1.75;
+}
+
+.sq-friends-count {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding-bottom: 5px;
+    color: color-mix(in srgb, var(--color-text) 38%, transparent);
+}
+
+.sq-friends-count strong {
+    color: var(--color-accent);
+    font-family: "Outfit", serif;
+    font-size: 38px;
+    font-weight: 500;
+}
+
+.sq-friends-count span {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* find */
+
+.sq-friends-find {
+    padding: 38px;
+    background: var(--color-bg);
+    border: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+
+.sq-friends-find-heading {
+    margin-bottom: 25px;
+}
+
+.sq-friends-find-heading h2 {
+    margin: 0;
+    color: var(--color-text);
+    font-family: "Outfit", serif;
+    font-size: 32px;
+    font-weight: 500;
+}
+
+.sq-friends-search {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    margin-top: 18px;
+    margin-bottom: 14px;
+}
+
+.sq-friends-search-input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    box-sizing: border-box;
+    padding: 0 16px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-family: "DM Sans", sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition:
+            border-color .2s ease,
+            box-shadow .2s ease,
+            background .2s ease;
+}
+
+.sq-search-prefix {
+    padding-left: 16px;
+    color: var(--color-accent);
+    font-family: "Outfit", serif;
+    font-size: 18px;
+}
+
+.sq-friends-search-input input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.sq-friends-search-input input::placeholder,
+.sq-friends-search-input::placeholder {
+    color: color-mix(in srgb, var(--color-text) 35%, transparent);
+}
+
+.sq-friends-search-input:focus {
+    border-color: var(--color-accent);
+    background: var(--color-surface);
+    box-shadow:
+            0 0 0 3px color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+/* search */
+
+.sq-friends-search-results {
+    margin-top: 35px;
+}
+
+.sq-friends-subheading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.sq-friends-subheading > span:last-child {
+    color: color-mix(in srgb, var(--color-text) 40%, transparent);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.sq-friends-people-list,
+.sq-friends-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.sq-friend-person {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 16px 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.sq-friend-avatar,
+.sq-friend-card-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-surface);
+    font-family: "Outfit", serif;
+    font-size: 19px;
+    text-decoration: none;
+}
+
+.sq-friend-person-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.sq-friend-username {
+    color: var(--color-text);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.sq-friend-username:hover {
+    color: var(--color-accent);
+}
+
+.sq-friend-person-info span {
+    margin-top: 3px;
+    color: color-mix(in srgb, var(--color-text) 40%, transparent);
+    font-size: 10px;
+}
+
+.sq-friend-action {
+    padding: 9px 13px;
+    border: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+    background: transparent;
+    color: var(--color-text);
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+            background .2s ease,
+            color .2s ease,
+            border-color .2s ease;
+}
+
+.sq-friend-action:hover {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-surface);
+}
+
+.sq-friend-action-primary {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-surface);
+}
+
+.sq-friend-action-primary:hover {
+    background: var(--color-text);
+    border-color: var(--color-text);
+}
+
+.sq-friends-empty-search {
+    padding: 25px 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.sq-friends-empty-search strong {
+    color: var(--color-text);
+    font-family: "Outfit", serif;
+    font-size: 21px;
+    font-weight: 500;
+}
+
+.sq-friends-empty-search p {
+    margin: 6px 0 0;
+    color: color-mix(in srgb, var(--color-text) 45%, transparent);
+    font-size: 11px;
+}
+
+/* sections */
+
+.sq-friends-section {
+    margin-top: 70px;
+}
+
+.sq-friends-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.sq-friends-section-header h2 {
+    margin: 0;
+    color: var(--color-text);
+    font-family: "Outfit", serif;
+    font-size: 36px;
+    font-weight: 500;
+}
+
+.sq-friends-section-count {
+    color: color-mix(in srgb, var(--color-text) 28%, transparent);
+    font-family: "Outfit", serif;
+    font-size: 28px;
+}
+
+.sq-friends-suggestion-note {
+    color: color-mix(in srgb, var(--color-text) 38%, transparent);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+}
+
+/* cards */
+
+.sq-friends-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.sq-friend-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+    transition:
+            transform .2s ease,
+            box-shadow .2s ease;
+}
+
+.sq-friend-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+            0 15px 35px color-mix(in srgb, var(--color-text) 7%, transparent);
+}
+
+.sq-friend-card-avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 21px;
+}
+
+.sq-friend-card-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.sq-friend-card-username {
+    color: var(--color-text);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.sq-friend-card-username:hover {
+    color: var(--color-accent);
+}
+
+.sq-friend-card-label {
+    margin-top: 4px;
+    color: color-mix(in srgb, var(--color-text) 38%, transparent);
+    font-size: 9px;
+    letter-spacing: .5px;
+}
+
+.sq-friend-card-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 7px;
+}
+
+.sq-friend-view {
+    color: var(--color-accent);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .7px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.sq-friend-view:hover {
+    color: var(--color-text);
+}
+
+.sq-friend-remove {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: color-mix(in srgb, var(--color-text) 32%, transparent);
+    font-family: inherit;
+    font-size: 8px;
+    cursor: pointer;
+}
+
+.sq-friend-remove:hover {
+    color: var(--color-accent);
+}
+
+/* request */
+
+.sq-friend-request-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+
+
+.sq-friends-empty {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 35px;
+    border: 1px dashed color-mix(in srgb, var(--color-text) 16%, transparent);
+}
+
+.sq-friends-empty-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--color-bg);
+    color: var(--color-accent);
+    font-family: "Outfit", serif;
+    font-size: 25px;
+}
+
+.sq-friends-empty h3 {
+    margin: 0;
+    color: var(--color-text);
+    font-family: "Outfit", serif;
+    font-size: 23px;
+    font-weight: 500;
+}
+
+.sq-friends-empty p {
+    margin: 6px 0 0;
+    color: color-mix(in srgb, var(--color-text) 45%, transparent);
+    font-size: 11px;
+}
+
+/* authentication */
+
+.sq-auth-page {
+    display: flex;
+    align-items: stretch;
+    min-height: calc(100vh - 80px);
+    box-sizing: border-box;
+    padding: 32px;
+    background: var(--color-bg);
+}
+
+.sq-auth-shell {
+    display: grid;
+    grid-template-columns: minmax(460px, .9fr) minmax(480px, 1.1fr);
+    width: 100%;
+    max-width: 1420px;
+    min-height: calc(100vh - 144px);
+    margin: 0 auto;
+    overflow: hidden;
+    background: var(--color-surface);
+    box-shadow:
+            0 24px 70px color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+/* responsive */
+
+@media (max-width: 750px) {
+    .sq-friends-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .sq-friends-grid,
+    .sq-friends-search {
+        grid-template-columns: 1fr;
+    }
+
+    .sq-friends-search button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 520px) {
+    .sq-friends-page {
+        width: min(100% - 28px, 1100px);
+        padding-top: 45px;
+    }
+
+    .sq-friends-find {
+        padding: 25px 20px;
+    }
+
+    .sq-friend-person {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .sq-friend-person-info {
+        min-width: 120px;
+    }
+
+    .sq-friend-request-actions {
+        width: 100%;
+        margin-left: 59px;
+    }
+
+    .sq-friend-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .sq-friend-card-actions {
+        width: 100%;
+        margin-left: 65px;
+        align-items: flex-start;
+    }
+
+    .sq-friends-empty {
+        align-items: flex-start;
+    }
+}
+
+/* dark mode */
+
+.sq-dark .sq-friends-header h1,
+.sq-dark .sq-friends-find-heading h2,
+.sq-dark .sq-friends-empty-search strong,
+.sq-dark .sq-friends-section-header h2,
+.sq-dark .sq-friends-empty h3,
+.sq-dark .sq-friend-username,
+.sq-dark .sq-friend-card-username {
+    color: var(--color-text) !important;
+}
+
+.sq-dark .sq-friends-header p {
+    color: color-mix(in srgb, var(--color-text) 68%, transparent) !important;
+}
+
+.sq-dark .sq-friends-count {
+    color: color-mix(in srgb, var(--color-text) 55%, transparent) !important;
+}
+
+.sq-dark .sq-friends-count strong {
+    color: var(--color-accent) !important;
+}
+
+.sq-dark .sq-friends-find {
+    background: var(--color-bg) !important;
+    border-color: var(--color-border) !important;
+}
+
+.sq-dark .sq-friends-search-input {
+    background: var(--color-surface) !important;
+    border-color: var(--color-border) !important;
+    color: var(--color-text) !important;
+}
+
+.sq-dark .sq-search-prefix {
+    color: var(--color-accent) !important;
+}
+
+.sq-dark .sq-friends-search-input input {
+    color: var(--color-text) !important;
+}
+
+.sq-dark .sq-friends-search-input input::placeholder,
+.sq-dark .sq-friends-search-input::placeholder {
+    color: color-mix(in srgb, var(--color-text) 48%, transparent) !important;
+}
+
+.sq-dark .sq-friends-search-input:focus {
+    border-color: var(--color-accent) !important;
+    background: var(--color-surface) !important;
+    box-shadow:
+            0 0 0 3px color-mix(in srgb, var(--color-accent) 16%, transparent) !important;
+}
+
+.sq-dark .sq-friends-subheading > span:last-child,
+.sq-dark .sq-friends-suggestion-note,
+.sq-dark .sq-friends-section-count {
+    color: color-mix(in srgb, var(--color-text) 55%, transparent) !important;
+}
+
+.sq-dark .sq-friend-person {
+    border-top-color: var(--color-border) !important;
+}
+
+.sq-dark .sq-friend-avatar,
+.sq-dark .sq-friend-card-avatar {
+    background: var(--color-accent) !important;
+    color: var(--color-bg) !important;
+}
+
+.sq-dark .sq-friend-username:hover,
+.sq-dark .sq-friend-card-username:hover {
+    color: var(--color-accent) !important;
+}
+
+.sq-dark .sq-friend-person-info span {
+    color: color-mix(in srgb, var(--color-text) 55%, transparent) !important;
+}
+
+.sq-dark .sq-friend-action {
+    border-color: var(--color-border) !important;
+    background: transparent !important;
+    color: var(--color-text) !important;
+}
+
+.sq-dark .sq-friend-action:hover {
+    border-color: var(--color-accent) !important;
+    background: var(--color-accent) !important;
+    color: var(--color-bg) !important;
+}
+
+.sq-dark .sq-friend-action-primary {
+    border-color: var(--color-accent) !important;
+    background: var(--color-accent) !important;
+    color: var(--color-bg) !important;
+}
+
+.sq-dark .sq-friend-action-primary:hover {
+    background: var(--color-text) !important;
+    border-color: var(--color-text) !important;
+    color: var(--color-bg) !important;
+}
+
+.sq-dark .sq-friends-empty-search {
+    border-top-color: var(--color-border) !important;
+}
+
+.sq-dark .sq-friends-empty-search p {
+    color: color-mix(in srgb, var(--color-text) 55%, transparent) !important;
+}
+
+.sq-dark .sq-friend-card {
+    background: var(--color-surface) !important;
+    border-color: var(--color-border) !important;
+}
+
+.sq-dark .sq-friend-card:hover {
+    box-shadow:
+            0 15px 35px color-mix(in srgb, var(--color-bg) 30%, transparent) !important;
+}
+
+.sq-dark .sq-friend-card-label {
+    color: color-mix(in srgb, var(--color-text) 55%, transparent) !important;
+}
+
+.sq-dark .sq-friend-view {
+    color: var(--color-accent) !important;
+}
+
+.sq-dark .sq-friend-view:hover {
+    color: var(--color-text) !important;
+}
+
+.sq-dark .sq-friend-remove {
+    color: color-mix(in srgb, var(--color-text) 45%, transparent) !important;
+}
+
+.sq-dark .sq-friend-remove:hover {
+    color: var(--color-accent) !important;
+}
+
+.sq-dark .sq-friends-empty {
+    border-color: var(--color-border) !important;
+}
+
+.sq-dark .sq-friends-empty-mark {
+    background: var(--color-bg) !important;
+    color: var(--color-accent) !important;
+}
+
+.sq-dark .sq-friends-empty p {
+    color: color-mix(in srgb, var(--color-text) 55%, transparent) !important;
+}
+
+.sq-dark .sq-auth-page {
+    background: var(--color-bg) !important;
+}
+
+.sq-dark .sq-auth-shell {
+    background: var(--color-surface) !important;
+    box-shadow:
+            0 24px 70px color-mix(in srgb, var(--color-bg) 35%, transparent) !important;
+}
+

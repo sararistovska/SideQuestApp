@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Create Group Quest";
+}
+
+<div class="sq-group-form-page">
+
+    <div class="sq-group-form-header">
+        <span class="sq-section-eyebrow">GROUP QUEST</span>
+        <h1>Create a quest</h1>
+        <p>
+            Create something for <strong>@ViewBag.GroupName</strong>.
+            Only members of this group will be able to see and complete it.
+        </p>
+    </div>
+
+    <div class="sq-group-form-card">
+        <a asp-action="Details"
+           asp-route-id="@ViewBag.GroupId"
+           class="sq-back-link">
+            Back to group
+        </a>
+        
+        <form asp-action="CreateQuest" asp-controller="Group" method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="id" value="@ViewBag.GroupId"/>
+
+            <div class="sq-form-field">
+                <label for="title">Quest title</label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    maxlength="150"
+                    placeholder="e.g. Sunrise walk together"
+                    required/>
+
+                <div class="sq-form-help">
+                    Give your quest a short, memorable name.
+                </div>
+            </div>
+
+            <div class="sq-form-field">
+                <label for="description">Description</label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="6"
+                    maxlength="1000"
+                    placeholder="What does everyone need to do?"></textarea>
+
+                <div class="sq-form-help">
+                    Add any details or rules your group should know.
+                </div>
+            </div>
+
+            <div class="sq-form-field">
+                <label for="pointsReward">Points reward</label>
+
+                <input
+                    type="number"
+                    id="pointsReward"
+                    name="pointsReward"
+                    min="1"
+                    value="10"
+                    required/>
+
+                <div class="sq-form-help">
+                    Decide how many points members earn when the quest is completed.
+                </div>
+            </div>
+
+            <div class="sq-group-form-note">
+                <strong>Group-only quest</strong>
+                <p>
+                    This quest is private to your group. It has no category,
+                    prerequisite, or difficulty requirement.
+                </p>
+            </div>
+
+            <div class="sq-form-actions">
+                <a
+                    asp-action="Details"
+                    asp-controller="Group"
+                    asp-route-id="@ViewBag.GroupId"
+                    class="sq-button sq-button-secondary">
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="sq-button sq-button-primary">
+                    Create quest
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

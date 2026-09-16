@@ -1,0 +1,213 @@
+﻿@model IEnumerable<SideQuestApp.Models.QuestCompletion>
+
+@{
+ViewData["Title"] = "Pending Reviews";
+
+var reviews = Model.ToList();
+
+}
+
+<div class="sq-review-page">
+
+
+<!-- HEADER -->
+
+<div class="sq-review-header">
+
+    <a asp-controller="Home"
+       asp-action="Index"
+       class="sq-back-link">
+        Back home
+    </a>
+
+    <div>
+
+        <div class="sq-section-eyebrow">
+            CONTROL ROOM
+        </div>
+
+        <h1>
+            Pending reviews.
+        </h1>
+
+        <p>
+            Review quest completions and decide whether
+            the submitted proof should be approved.
+        </p>
+
+    </div>
+
+    <div class="sq-review-count">
+
+        <strong id="pendingReviewCount">
+            @reviews.Count
+        </strong>
+
+        <span>
+            pending
+        </span>
+
+    </div>
+
+</div>
+
+
+<div id="reviewContent">
+
+    @if (!reviews.Any())
+    {
+        <div class="sq-review-empty">
+
+            <div class="sq-review-empty-mark">
+                0
+            </div>
+
+            <div>
+
+                <div class="sq-section-eyebrow">
+                    ALL CLEAR
+                </div>
+
+                <h2>
+                    No pending completions.
+                </h2>
+
+                <p>
+                    Everything has been reviewed for now.
+                </p>
+
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="sq-review-list"
+             id="reviewList">
+
+            @foreach (var item in reviews)
+            {
+                <article class="sq-review-card"
+                         data-review-id="@item.Id">
+
+                    <!-- PHOTO -->
+
+                    <div class="sq-review-photo-wrap">
+
+                        @if (!string.IsNullOrWhiteSpace(item.PhotoUrl))
+                        {
+                            <img src="@item.PhotoUrl"
+                                 alt="Proof submitted by @item.User?.UserName"
+                                 class="sq-review-photo" />
+                        }
+                        else
+                        {
+                            <div class="sq-review-no-photo">
+                                No photo
+                            </div>
+                        }
+
+                    </div>
+
+
+                    <!-- CONTENT -->
+
+                    <div class="sq-review-content">
+
+                        <div class="sq-review-top">
+
+                            <div class="sq-review-user">
+
+                                @{
+                                    var username = item.User?.UserName;
+                                }
+                                
+                                    <a href="/Profile/@username"
+                                       class="sq-review-username">
+                                        @username
+                                    </a>
+
+                                <span class="sq-review-submitted">
+                                    Submitted
+                                    @item.SubmittedAt.ToString("g")
+                                </span>
+
+                            </div>
+
+
+                            <div class="sq-review-status">
+                                PENDING
+                            </div>
+
+                        </div>
+
+
+                        <!-- QUEST -->
+
+                        <div class="sq-review-quest">
+
+                            <span class="sq-section-eyebrow">
+                                QUEST
+                            </span>
+
+                            <h2>
+                                @item.Quest?.Title
+                            </h2>
+
+                            @if (item.Quest != null)
+                            {
+                                <div class="sq-review-xp">
+                                    +@item.Quest.PointsReward points
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <!-- ACTIONS -->
+
+                        <div class="sq-review-actions">
+
+                            <form asp-action="Approve"
+                                  asp-route-id="@item.Id"
+                                  method="post"
+                                  class="sq-review-form">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit"
+                                        class="sq-review-approve">
+                                    Approve
+                                </button>
+
+                            </form>
+
+
+                            <form asp-action="Reject"
+                                  asp-route-id="@item.Id"
+                                  method="post"
+                                  class="sq-review-form">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit"
+                                        class="sq-review-reject">
+                                    Reject
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+
+</div>
+
+
+</div>

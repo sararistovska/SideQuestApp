@@ -1,0 +1,17 @@
+﻿@{
+var isLoggedIn = User.Identity?.IsAuthenticated == true;
+var isAdmin = User.IsInRole("Admin");
+}
+
+@if (!isLoggedIn)
+{
+<partial name="LoggedOut" />
+}
+else if (isAdmin)
+{
+<partial name="AdminDashboard" />
+}
+else
+{
+<partial name="UserDashboard" />
+}

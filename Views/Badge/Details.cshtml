@@ -1,0 +1,112 @@
+
+@model SideQuestApp.Models.Badge
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="sq-badge-details-page">
+
+    <a asp-action="Index"
+       class="sq-back-link">
+        Back to badges
+    </a>
+
+    <div class="sq-badge-details-card">
+
+        <div class="sq-badge-details-visual">
+
+            @if (!string.IsNullOrWhiteSpace(Model.IconUrl))
+            {
+                <img src="@Model.IconUrl"
+                     alt="@Model.Name"
+                     class="sq-badge-details-icon" />
+            }
+            else
+            {
+                <div class="sq-badge-details-placeholder">
+                    @Model.Name.Substring(0, 1).ToUpper()
+                </div>
+            }
+
+        </div>
+
+        <div class="sq-badge-details-content">
+
+            <span class="sq-label">
+                BADGE
+            </span>
+
+            <h1>@Model.Name</h1>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p class="sq-badge-details-description">
+                    @Model.Description
+                </p>
+            }
+
+            <div class="sq-badge-details-info">
+
+                <div>
+                    <span>Criteria</span>
+
+                    <strong>
+                        @if (Model.CriteriaType ==
+                            SideQuestApp.Models.BadgeCriteriaType.CompletionCount)
+                        {
+                            @:Total completed quests
+                        }
+                        else
+                        {
+                            @:Category quests
+                        }
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Required</span>
+
+                    <strong>
+                        @Model.RequiredCount
+                    </strong>
+                </div>
+
+                @if (Model.RequiredCategory != null)
+                {
+                    <div>
+                        <span>Category</span>
+
+                        <strong>
+                            @Model.RequiredCategory.Name
+                        </strong>
+                    </div>
+                }
+
+            </div>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="sq-badge-details-actions">
+
+                    <a asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="sq-button sq-button-primary">
+                        Edit badge
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@Model.Id"
+                       class="sq-button sq-button-secondary">
+                        Delete
+                    </a>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+

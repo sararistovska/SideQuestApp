@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "Join Group";
+}
+
+<div class="sq-group-form-page sq-join-page">
+
+    <div class="sq-group-form-header">
+
+        <a asp-action="Index"
+           class="sq-back-link">
+            Back to groups
+        </a>
+
+        <span class="sq-section-eyebrow">
+            JOIN A GROUP
+        </span>
+
+        <h1>Join a group</h1>
+
+        <p>
+            Enter the invite code shared by the group creator.
+        </p>
+
+    </div>
+
+
+    <form asp-action="JoinByCode"
+          method="post"
+          class="sq-group-form-card sq-join-card">
+
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly"
+             class="sq-validation-summary">
+        </div>
+
+
+        <div class="sq-form-field">
+
+            <label for="inviteCode">
+                Invite code
+            </label>
+
+            <input type="text"
+                   id="inviteCode"
+                   name="inviteCode"
+                   maxlength="20"
+                   placeholder="ENTER CODE"
+                   autocomplete="off"
+                   required />
+
+            <span class="sq-form-help">
+                Enter the code exactly as it was shared with you.
+            </span>
+
+        </div>
+
+
+        <div class="sq-form-actions">
+
+            <a asp-action="Index"
+               class="sq-button sq-button-secondary">
+                Cancel
+            </a>
+
+            <button type="submit"
+                    class="sq-button sq-button-primary">
+                Join group
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

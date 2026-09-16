@@ -1,0 +1,449 @@
+@using SideQuestApp.Models
+@model Quest
+
+@{
+    ViewData["Title"] = Model.Title;
+
+    bool isLoggedIn = ViewBag.IsLoggedIn ?? false;
+    bool hasCompleted = ViewBag.HasCompleted ?? false;
+    bool hasPendingCompletion = ViewBag.HasPendingCompletion ?? false;
+    bool hasRejectedCompletion = ViewBag.HasRejectedCompletion ?? false;
+    bool canStart = ViewBag.CanStart ?? false;
+    bool isAdmin = ViewBag.IsAdmin ?? false;
+
+    var communityCompletions =
+        ViewBag.CommunityCompletions as List<QuestCompletion>
+        ?? new List<QuestCompletion>();
+
+    bool questInactive = !Model.IsActive;
+}
+
+<div class="sq-quest-details-page">
+
+    <a asp-controller="Quest"
+       asp-action="Index"
+       class="sq-back-link">
+        Back to quests
+    </a>
+
+    <main class="sq-quest-detail">
+
+        <section class="sq-detail-hero">
+
+            <div class="sq-detail-hero-content">
+
+                <div class="sq-detail-meta">
+
+                    <span class="sq-detail-category">
+                        @(Model.Category?.Name ?? "General")
+                    </span>
+
+                    <span class="sq-detail-category">
+                        @Model.Difficulty.ToString().ToUpper()
+                    </span>
+
+                    @if (!Model.IsActive)
+                    {
+                        <span class="sq-detail-category">
+                            INACTIVE
+                        </span>
+                    }
+
+                </div>
+
+                <span class="sq-section-label">
+                    SIDE QUEST
+                </span>
+
+                <h1>
+                    @Model.Title
+                </h1>
+
+                @if (!string.IsNullOrWhiteSpace(Model.Description))
+                {
+                    <p class="sq-detail-description">
+                        @Model.Description
+                    </p>
+                }
+
+            </div>
+
+            <div class="sq-detail-reward-block">
+
+                <span class="sq-reward-small-label">
+                    EACH COMPLETION
+                </span>
+
+                <strong>
+                    +@Model.PointsReward
+                </strong>
+
+                <span>
+                    points
+                </span>
+
+            </div>
+
+        </section>
+
+        @if (isAdmin)
+        {
+            <div class="sq-admin-quest-actions">
+
+                <span class="sq-admin-label">
+                    ADMIN CONTROLS
+                </span>
+
+                <div class="sq-admin-quest-buttons">
+
+                    <a asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="sq-button sq-button-secondary">
+                        Edit quest
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@Model.Id"
+                       class="sq-button sq-button-danger">
+                        Delete quest
+                    </a>
+
+                </div>
+
+            </div>
+        }
+
+        <section class="sq-detail-middle">
+
+            <div class="sq-detail-action-panel @(questInactive ? "sq-quest-inactive-panel" : "")">
+
+                @if (questInactive)
+                {
+                    <div class="sq-quest-inactive-overlay">
+
+                        <div class="sq-quest-inactive-mark">
+                            INACTIVE
+                        </div>
+
+                        <span class="sq-section-label">
+                            QUEST NO LONGER ACTIVE
+                        </span>
+
+                        <h2>
+                            This quest is currently unavailable.
+                        </h2>
+
+                        <p>
+                            This quest has been deactivated and is no longer
+                            accepting new submissions.
+                        </p>
+
+                        <div class="sq-quest-inactive-status">
+                            <span class="sq-quest-inactive-dot"></span>
+                            Quest inactive
+                        </div>
+
+                    </div>
+                }
+
+                else if (hasCompleted)
+                {
+                    <span class="sq-section-label">
+                        YOU DID IT
+                    </span>
+
+                    <h2>
+                        Quest complete.
+                    </h2>
+
+                    <p>
+                        Your submission was approved and your
+                        @Model.PointsReward points were awarded.
+                    </p>
+                }
+
+                else if (hasPendingCompletion)
+                {
+                    <span class="sq-section-label">
+                        UNDER REVIEW
+                    </span>
+
+                    <h2>
+                        Your proof is being reviewed.
+                    </h2>
+
+                    <p>
+                        Once your submission is approved, you will
+                        receive your points.
+                    </p>
+                }
+
+                else if (hasRejectedCompletion)
+                {
+                    <span class="sq-section-label">
+                        TRY AGAIN
+                    </span>
+
+                    <h2>
+                        Your previous proof was rejected.
+                    </h2>
+
+                    <p>
+                        Complete the quest again and submit new proof.
+                    </p>
+
+                    <a asp-controller="QuestCompletion"
+                       asp-action="Create"
+                       asp-route-questId="@Model.Id"
+                       class="sq-detail-button sq-detail-button-primary">
+                        Submit again
+                    </a>
+                }
+
+                else if (canStart)
+                {
+                    <span class="sq-section-label">
+                        YOUR TURN
+                    </span>
+
+                    <h2>
+                        Ready to start?
+                    </h2>
+
+                    <p>
+                        Complete the quest in real life, then upload
+                        a photo as proof.
+                    </p>
+
+                    <a asp-controller="QuestCompletion"
+                       asp-action="Create"
+                       asp-route-questId="@Model.Id"
+                       class="sq-detail-button sq-detail-button-primary">
+                        Submit Quest
+                    </a>
+                }
+
+            </div>
+
+        </section>
+
+        <section class="sq-completions-section">
+
+            <div class="sq-completions-header">
+
+                <div>
+
+                    <span class="sq-section-label">
+                        COMMUNITY
+                    </span>
+
+                    <h2>
+                        People who did it.
+                    </h2>
+
+                </div>
+
+                <span class="sq-completion-count">
+                    @communityCompletions.Count
+                </span>
+
+            </div>
+
+            @if (communityCompletions.Any())
+            {
+                <div class="sq-completion-grid">
+
+                    @foreach (var completion in communityCompletions)
+                    {
+                        var completionUsername =
+                            completion.User?.UserName ?? "User";
+
+                        var completionDate =
+                            completion.SubmittedAt
+                                .ToLocalTime()
+                                .ToString("dd MMM yyyy, HH:mm");
+
+                        var completionInitial =
+                            completionUsername
+                                .Substring(0, 1)
+                                .ToUpper();
+
+                        <article class="sq-completion-post"
+                                 data-completion-modal
+                                 data-username="@completionUsername"
+                                 data-date="@completionDate"
+                                 data-caption="@completion.Caption"
+                                 data-photo="@completion.PhotoUrl"
+                                 data-points="@Model.PointsReward"
+                                 data-profile="/Profile/@completionUsername">
+
+                            <div class="sq-completion-image">
+
+                                <img src="@completion.PhotoUrl"
+                                     alt="Quest completion by @completionUsername" />
+
+                            </div>
+
+                            <div class="sq-completion-info">
+
+                                <div class="sq-completion-user">
+
+                                    <div class="sq-completion-avatar">
+
+                                        @if (!string.IsNullOrWhiteSpace(
+                                            completion.User?.ProfileImageUrl))
+                                        {
+                                            <img src="@completion.User.ProfileImageUrl"
+                                                 alt="@completionUsername" />
+                                        }
+                                        else
+                                        {
+                                            @completionInitial
+                                        }
+
+                                    </div>
+
+                                    <div>
+
+                                        <a href="/Profile/@completionUsername"
+                                           class="sq-completion-username"
+                                           data-no-modal>
+                                            @completionUsername
+                                        </a>
+
+                                        <span class="sq-completion-date">
+                                            @completionDate
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                                @if (!string.IsNullOrWhiteSpace(
+                                    completion.Caption))
+                                {
+                                    <p class="sq-completion-caption">
+                                        @completion.Caption
+                                    </p>
+                                }
+
+                                <div class="sq-completion-points">
+                                    +@Model.PointsReward points
+                                </div>
+
+                            </div>
+
+                        </article>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="sq-no-completions">
+
+                    <span class="sq-section-label">
+                        BE THE FIRST
+                    </span>
+
+                    <h3>
+                        Nobody has completed this one yet.
+                    </h3>
+
+                    <p>
+                        Your submission could be the first post
+                        on this quest.
+                    </p>
+
+                </div>
+            }
+
+        </section>
+
+    </main>
+
+</div>
+
+<!-- COMMUNITY POST MODAL -->
+
+<div class="sq-quest-modal"
+     id="communityPostModal"
+     aria-hidden="true">
+
+    <div class="sq-quest-modal-backdrop"
+         data-modal-close>
+    </div>
+
+    <div class="sq-quest-modal-content"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="communityModalUsername">
+
+        <button type="button"
+                class="sq-quest-modal-close"
+                aria-label="Close"
+                data-modal-close>
+            ×
+        </button>
+
+        <div class="sq-quest-modal-image">
+
+            <img id="communityModalImage"
+                 src=""
+                 alt="Quest completion" />
+
+        </div>
+
+        <div class="sq-quest-modal-body">
+
+            <span class="sq-section-eyebrow">
+                COMMUNITY COMPLETION
+            </span>
+
+            <div class="sq-modal-user">
+
+                <div class="sq-modal-avatar"
+                     id="communityModalAvatar">
+                    U
+                </div>
+
+                <div>
+
+                    <a id="communityModalUsername"
+                       class="sq-modal-username"
+                       href="#">
+                    </a>
+
+                    <span id="communityModalDate"
+                          class="sq-quest-modal-date">
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="sq-quest-modal-caption"
+                 id="communityModalCaptionWrapper">
+
+                <span>
+                    NOTE
+                </span>
+
+                <p id="communityModalCaption"></p>
+
+            </div>
+
+            <div class="sq-quest-modal-meta">
+
+                <strong id="communityModalPoints">
+                    +0 points
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+

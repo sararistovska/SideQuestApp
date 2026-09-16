@@ -1,0 +1,270 @@
+@model SideQuestApp.Models.Badge
+
+@{
+    ViewData["Title"] = "Create Badge";
+}
+
+<div class="sq-badge-form-page">
+
+    <a asp-action="Index" class="sq-back-link">
+        Back to badges
+    </a>
+
+    <div class="sq-badge-form-header">
+        <span class="sq-label">ADMIN</span>
+
+        <h1>Create badge</h1>
+
+        <p>
+            Create a new achievement that users can unlock through their
+            SideQuest activity.
+        </p>
+    </div>
+
+
+    <div class="sq-badge-form-card">
+
+        <form asp-action="Create"
+              method="post"
+              enctype="multipart/form-data">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="sq-validation-summary">
+            </div>
+
+
+            <!-- NAME -->
+
+            <div class="sq-form-field">
+
+                <label asp-for="Name">
+                    Badge name
+                </label>
+
+                <input asp-for="Name"
+                       placeholder="e.g. Quest Hunter" />
+
+                <span asp-validation-for="Name"
+                      class="sq-field-error">
+                </span>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="sq-form-field">
+
+                <label asp-for="Description">
+                    Description
+                </label>
+
+                <textarea asp-for="Description"
+                          rows="4"
+                          placeholder="Describe what this badge represents..."></textarea>
+
+                <span asp-validation-for="Description"
+                      class="sq-field-error">
+                </span>
+
+            </div>
+
+
+            <!-- BADGE IMAGE -->
+
+            <div class="sq-form-field">
+
+                <label for="icon">
+                    Badge image
+                </label>
+
+                <p class="sq-form-help">
+                    Upload an image that will represent this achievement.
+                </p>
+
+
+                <label for="icon"
+                       class="sq-upload-box">
+
+                    <div class="sq-upload-icon">
+                        +
+                    </div>
+
+                    <div class="sq-upload-content">
+
+                        <strong id="sq-badge-file-name">
+                            Choose an image
+                        </strong>
+
+                        <span id="sq-badge-file-hint">
+                            JPG, JPEG, PNG or WEBP · max 10 MB
+                        </span>
+
+                    </div>
+
+                    <span class="sq-upload-action">
+                        Browse
+                    </span>
+
+                </label>
+
+
+                <input type="file"
+                       name="icon"
+                       id="icon"
+                       accept=".jpg,.jpeg,.png,.webp"
+                       required
+                       class="sq-upload-input" />
+
+            </div>
+
+
+            <!-- CRITERIA -->
+
+            <div class="sq-form-field">
+
+                <label asp-for="CriteriaType">
+                    Criteria
+                </label>
+
+                <select asp-for="CriteriaType">
+
+                    <option value="CompletionCount">
+                        Total completed quests
+                    </option>
+
+                    <option value="CategoryCount">
+                        Completed quests in a category
+                    </option>
+
+                </select>
+
+                <span asp-validation-for="CriteriaType"
+                      class="sq-field-error">
+                </span>
+
+            </div>
+
+
+            <!-- REQUIRED COUNT -->
+
+            <div class="sq-form-field">
+
+                <label asp-for="RequiredCount">
+                    Required count
+                </label>
+
+                <input asp-for="RequiredCount"
+                       type="number"
+                       min="1"
+                       placeholder="10" />
+
+                <span asp-validation-for="RequiredCount"
+                      class="sq-field-error">
+                </span>
+
+            </div>
+
+
+            <!-- REQUIRED CATEGORY -->
+
+            <div class="sq-form-field">
+
+                <label asp-for="RequiredCategoryId">
+                    Required category
+                </label>
+
+                <select asp-for="RequiredCategoryId"
+                        asp-items="ViewBag.RequiredCategoryId">
+
+                    <option value="">
+                        No category
+                    </option>
+
+                </select>
+
+                <span asp-validation-for="RequiredCategoryId"
+                      class="sq-field-error">
+                </span>
+
+                <div class="sq-form-help">
+                    Only required when the criteria is category based.
+                </div>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="sq-badge-form-actions">
+
+                <a asp-action="Index"
+                   class="sq-button sq-button-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="sq-button sq-button-primary">
+                    Create badge
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        const badgeFileInput =
+            document.getElementById("icon");
+
+        const badgeFileName =
+            document.getElementById("sq-badge-file-name");
+
+        const badgeFileHint =
+            document.getElementById("sq-badge-file-hint");
+
+        if (badgeFileInput) {
+
+            badgeFileInput.addEventListener("change", function () {
+
+                if (this.files && this.files.length > 0) {
+
+                    badgeFileName.textContent =
+                        this.files[0].name;
+
+                    badgeFileHint.textContent =
+                        "Image selected";
+
+                } else {
+
+                    badgeFileName.textContent =
+                        "Choose an image";
+
+                    badgeFileHint.textContent =
+                        "JPG, JPEG, PNG or WEBP · max 10 MB";
+
+                }
+
+            });
+
+        }
+
+    </script>
+
+
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial"
+        );
+    }
+
+}

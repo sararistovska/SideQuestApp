@@ -1,0 +1,294 @@
+@model SideQuestApp.Models.Quest
+
+@{
+    ViewData["Title"] = "Edit Quest";
+}
+
+<div class="sq-admin-form-page">
+
+    <div class="sq-admin-form-header">
+
+        <div>
+
+            <span class="sq-admin-eyebrow">
+                ADMIN
+            </span>
+
+            <h1>
+                Edit quest
+            </h1>
+
+            <p>
+                Update the details of this quest and control whether
+                it is currently available to users.
+            </p>
+
+        </div>
+
+        <a asp-action="Details"
+           asp-route-id="@Model.Id"
+           class="sq-button sq-button-secondary">
+            Cancel
+        </a>
+
+    </div>
+
+
+    <div class="sq-admin-form-card">
+
+        <form asp-action="Edit"
+              method="post"
+              class="sq-admin-form">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden"
+                   asp-for="Id" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="sq-form-validation">
+            </div>
+
+
+            <!-- QUEST DETAILS -->
+
+            <div class="sq-form-section">
+
+                <div class="sq-form-section-heading">
+
+                    <span>01</span>
+
+                    <div>
+                        <h2>Quest details</h2>
+
+                        <p>
+                            Define what players will see when they
+                            discover this quest.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="sq-form-grid">
+
+                    <div class="sq-form-field sq-form-field-full">
+
+                        <label asp-for="Title">
+                            Quest title
+                        </label>
+
+                        <input asp-for="Title"
+                               class="sq-form-input"
+                               placeholder="Enter quest title" />
+
+                        <span asp-validation-for="Title"
+                              class="sq-field-error">
+                        </span>
+
+                    </div>
+
+
+                    <div class="sq-form-field sq-form-field-full">
+
+                        <label asp-for="Description">
+                            Description
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="sq-form-textarea"
+                                  rows="6"
+                                  placeholder="Describe what the player needs to do...">
+                        </textarea>
+
+                        <span asp-validation-for="Description"
+                              class="sq-field-error">
+                        </span>
+
+                    </div>
+
+
+                    <div class="sq-form-field">
+
+                        <label asp-for="CategoryId">
+                            Category
+                        </label>
+
+                        <select asp-for="CategoryId"
+                                asp-items="ViewBag.CategoryId"
+                                class="sq-form-select">
+
+                            <option value="">
+                                Select category
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="CategoryId"
+                              class="sq-field-error">
+                        </span>
+
+                    </div>
+
+
+                    <div class="sq-form-field">
+
+                        <label asp-for="Difficulty">
+                            Difficulty
+                        </label>
+
+                        <select asp-for="Difficulty"
+                                asp-items="Html.GetEnumSelectList<SideQuestApp.Models.DifficultyLevel>()"
+                                class="sq-form-select">
+                        </select>
+
+                        <span asp-validation-for="Difficulty"
+                              class="sq-field-error">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- REWARDS -->
+
+            <div class="sq-form-section">
+
+                <div class="sq-form-section-heading">
+
+                    <span>02</span>
+
+                    <div>
+                        <h2>Quest reward</h2>
+
+                        <p>
+                            Control how many points users receive
+                            when their submission is approved.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="sq-form-grid">
+
+                    <div class="sq-form-field">
+
+                        <label asp-for="PointsReward">
+                            Points per completion
+                        </label>
+
+                        <div class="sq-input-with-suffix">
+
+                            <input asp-for="PointsReward"
+                                   type="number"
+                                   min="1"
+                                   class="sq-form-input" />
+
+                            <span>
+                                PTS
+                            </span>
+
+                        </div>
+
+                        <span asp-validation-for="PointsReward"
+                              class="sq-field-error">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- AVAILABILITY -->
+
+            <div class="sq-form-section">
+
+                <div class="sq-form-section-heading">
+
+                    <span>03</span>
+
+                    <div>
+                        <h2>Quest availability</h2>
+
+                        <p>
+                            Control whether users can currently
+                            discover and submit this quest.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sq-form-grid">
+
+                    <div class="sq-form-field sq-form-field-full">
+
+                        <label class="sq-toggle-field">
+
+                            <input asp-for="IsActive"
+                                   type="checkbox" />
+
+                            <span class="sq-toggle-box"></span>
+
+                            <span>
+
+                                <strong>
+                                    Quest is active
+                                </strong>
+
+                                <small>
+                                    When enabled, users can discover
+                                    and submit this quest.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="sq-admin-form-footer">
+
+                <a asp-action="Details"
+                   asp-route-id="@Model.Id"
+                   class="sq-button sq-button-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="sq-button sq-button-primary">
+                    Save changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
+    }
+
+}
+

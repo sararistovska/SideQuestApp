@@ -1,0 +1,157 @@
+﻿@model SideQuestApp.Models.Quest
+
+@{
+    ViewData["Title"] = "Delete Quest";
+    var hasCompletions = ViewBag.HasCompletions is bool value && value;
+}
+
+<div class="sq-group-form-page sq-delete-page">
+
+    <div class="sq-group-form-header">
+
+        <span class="sq-section-eyebrow">
+            GROUP QUEST
+        </span>
+
+        <h1>
+            Delete quest
+        </h1>
+
+        <p>
+            You are about to remove this quest from
+            <strong>@ViewBag.GroupName</strong>.
+        </p>
+
+    </div>
+
+
+    <div class="sq-delete-card">
+
+        <div class="sq-delete-warning">
+
+            <span class="sq-section-eyebrow">
+                @if (hasCompletions)
+                {
+                    <text>CAN'T DELETE</text>
+                }
+                else
+                {
+                    <text>PLEASE CONFIRM</text>
+                }
+            </span>
+
+
+            <h2>
+                @Model.Title
+            </h2>
+
+
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p>
+                    @Model.Description
+                </p>
+            }
+
+        </div>
+
+
+        <div class="sq-delete-stats">
+
+            <div>
+                <span>
+                    Reward
+                </span>
+
+                <strong>
+                    @Model.PointsReward XP
+                </strong>
+            </div>
+
+
+            <div>
+                <span>
+                    Group
+                </span>
+
+                <strong>
+                    @ViewBag.GroupName
+                </strong>
+            </div>
+
+        </div>
+
+
+        @if (hasCompletions)
+        {
+            <div class="sq-group-form-note">
+
+                <strong>
+                    This quest cannot be deleted
+                </strong>
+
+                <p>
+                    Members have already submitted completions
+                    for this quest. The quest must remain so that
+                    its completion history is preserved.
+                </p>
+
+            </div>
+
+
+            <div class="sq-form-actions">
+
+                <a asp-controller="Quest"
+                   asp-action="GroupQuestDetails"
+                   asp-route-id="@Model.Id"
+                   class="sq-button sq-button-primary">
+                    Back to quest
+                </a>
+
+            </div>
+        }
+        else
+        {
+            <div class="sq-delete-description">
+
+                <p>
+                    This action cannot be undone. The quest will be
+                    permanently removed from this group.
+                </p>
+
+            </div>
+
+
+            <form asp-action="DeleteQuestConfirmed"
+                  asp-controller="Group"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       name="id"
+                       value="@Model.Id" />
+
+
+                <div class="sq-form-actions">
+
+                    <a asp-controller="Quest"
+                       asp-action="GroupQuestDetails"
+                       asp-route-id="@Model.Id"
+                       class="sq-button sq-button-secondary">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                            class="sq-button sq-button-primary">
+                        Delete Quest
+                    </button>
+
+                </div>
+
+            </form>
+        }
+
+    </div>
+
+</div>

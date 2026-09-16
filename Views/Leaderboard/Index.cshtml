@@ -1,0 +1,374 @@
+﻿@model IEnumerable<SideQuestApp.Models.ApplicationUser>
+
+@{
+ViewData["Title"] = "Leaderboard";
+
+
+var users = Model.ToList();
+var currentUserId = ViewBag.CurrentUserId as string;
+
+var search = ViewBag.Search as string;
+var searchedUserId = ViewBag.SearchedUserId as string;
+
+var topThree = users.Take(3).ToList();
+var remainingUsers = users.Skip(3).ToList();
+
+var currentUser = users.FirstOrDefault(u => u.Id == currentUserId);
+var currentUserRank = currentUser == null
+    ? 0
+    : users.FindIndex(u => u.Id == currentUserId) + 1;
+
+
+}
+
+<div class="sq-leaderboard-page">
+
+
+<section class="sq-leaderboard-header">
+
+    <div>
+        <span class="sq-section-kicker">SIDEQUEST RANKINGS</span>
+
+        <h1>Leaderboard</h1>
+
+        <p>
+            See who is making the most of their real life.
+            Every completed quest moves you higher.
+        </p>
+    </div>
+
+    @if (currentUser != null)
+    {
+        <a href="/Profile" class="sq-your-rank">
+            <span class="sq-your-rank-label">YOUR RANK</span>
+
+            <strong>#@currentUserRank</strong>
+
+            <span class="sq-your-rank-points">
+                @currentUser.Points pts
+            </span>
+        </a>
+    }
+
+</section>
+
+
+<section class="sq-leaderboard-filters">
+
+    <form method="get" class="sq-leaderboard-filter-form">
+
+        <div class="sq-leaderboard-search">
+            <input
+                type="text"
+                name="search"
+                value="@search"
+                placeholder="Search users..."
+                autocomplete="off" />
+        </div>
+        
+
+        <button type="submit" class="sq-leaderboard-filter-button">
+            Search
+        </button>
+
+        @if (!string.IsNullOrWhiteSpace(search))
+        {
+            <a
+                asp-controller="Leaderboard"
+                asp-action="Index"
+                class="sq-leaderboard-clear">
+                Clear
+            </a>
+        }
+
+    </form>
+
+</section>
+
+
+@if (!string.IsNullOrWhiteSpace(search))
+{
+    @if (string.IsNullOrWhiteSpace(searchedUserId))
+    {
+        <div class="sq-leaderboard-search-result sq-leaderboard-search-empty">
+            No player matching
+            <strong>@search</strong>
+            was found.
+        </div>
+    }
+}
+
+
+@if (users.Count == 0)
+{
+    <section class="sq-leaderboard-empty">
+
+        <span class="sq-section-kicker">NO RESULTS</span>
+
+        <h2>No adventurers found.</h2>
+
+        <p>
+            Try another username.
+        </p>
+
+    </section>
+}
+else
+{
+    @if (topThree.Count > 0)
+    {
+        <section class="sq-podium-section">
+
+            <div class="sq-podium">
+
+                @if (topThree.Count >= 2)
+                {
+                    var user = topThree[1];
+                    var isSearchedUser = user.Id == searchedUserId;
+
+                    <article
+                        class="sq-podium-card sq-podium-second @(isSearchedUser ? "sq-searched-player sq-search-target" : "")"
+                        data-user-id="@user.Id">
+
+                        <div class="sq-podium-rank">
+                            02
+                        </div>
+
+                        <div class="sq-podium-avatar">
+                            @if (!string.IsNullOrWhiteSpace(user.ProfileImageUrl))
+                            {
+                                <img src="@user.ProfileImageUrl"
+                                     alt="@user.UserName" />
+                            }
+                            else
+                            {
+                                <span>
+                                    @(user.UserName?.Substring(0, 1).ToUpper() ?? "?")
+                                </span>
+                            }
+                        </div>
+
+                        <span class="sq-podium-position">SECOND</span>
+
+                        <a
+                            href="/Profile/@user.UserName"
+                            class="sq-podium-username">
+                            @user.UserName
+                        </a>
+
+                        <div class="sq-podium-meta">
+                            <span>Level @user.Level</span>
+                        </div>
+
+                        <strong class="sq-podium-points">
+                            @user.Points
+                            <small>PTS</small>
+                        </strong>
+
+                    </article>
+                }
+
+
+                @if (topThree.Count >= 1)
+                {
+                    var user = topThree[0];
+                    var isSearchedUser = user.Id == searchedUserId;
+
+                    <article
+                        class="sq-podium-card sq-podium-first @(isSearchedUser ? "sq-searched-player sq-search-target" : "")"
+                        data-user-id="@user.Id">
+
+                        <div class="sq-podium-rank">
+                            01
+                        </div>
+
+                        <div class="sq-podium-avatar">
+                            @if (!string.IsNullOrWhiteSpace(user.ProfileImageUrl))
+                            {
+                                <img src="@user.ProfileImageUrl"
+                                     alt="@user.UserName" />
+                            }
+                            else
+                            {
+                                <span>
+                                    @(user.UserName?.Substring(0, 1).ToUpper() ?? "?")
+                                </span>
+                            }
+                        </div>
+
+                        <span class="sq-podium-position">FIRST</span>
+
+                        <a
+                            href="/Profile/@user.UserName"
+                            class="sq-podium-username">
+                            @user.UserName
+                        </a>
+
+                        <div class="sq-podium-meta">
+                            <span>Level @user.Level</span>
+                        </div>
+
+                        <strong class="sq-podium-points">
+                            @user.Points
+                            <small>PTS</small>
+                        </strong>
+
+                    </article>
+                }
+
+
+                @if (topThree.Count >= 3)
+                {
+                    var user = topThree[2];
+                    var isSearchedUser = user.Id == searchedUserId;
+
+                    <article
+                        class="sq-podium-card sq-podium-third @(isSearchedUser ? "sq-searched-player sq-search-target" : "")"
+                        data-user-id="@user.Id">
+
+                        <div class="sq-podium-rank">
+                            03
+                        </div>
+
+                        <div class="sq-podium-avatar">
+                            @if (!string.IsNullOrWhiteSpace(user.ProfileImageUrl))
+                            {
+                                <img src="@user.ProfileImageUrl"
+                                     alt="@user.UserName" />
+                            }
+                            else
+                            {
+                                <span>
+                                    @(user.UserName?.Substring(0, 1).ToUpper() ?? "?")
+                                </span>
+                            }
+                        </div>
+
+                        <span class="sq-podium-position">THIRD</span>
+
+                        <a
+                            href="/Profile/@user.UserName"
+                            class="sq-podium-username">
+                            @user.UserName
+                        </a>
+
+                        <div class="sq-podium-meta">
+                            <span>Level @user.Level</span>
+                        </div>
+
+                        <strong class="sq-podium-points">
+                            @user.Points
+                            <small>PTS</small>
+                        </strong>
+
+                    </article>
+                }
+
+            </div>
+
+        </section>
+    }
+
+
+    @if (remainingUsers.Any())
+    {
+        <section class="sq-ranking-section">
+
+            <div class="sq-ranking-heading">
+                <span class="sq-section-kicker">THE RANKINGS</span>
+                <span>@users.Count PLAYERS</span>
+            </div>
+
+            <div class="sq-ranking-list">
+
+                @for (int i = 0; i < 10; i++)
+                {
+                    var user = remainingUsers[i];
+                    var rank = i + 4;
+                    var isCurrentUser = user.Id == currentUserId;
+                    var isSearchedUser = user.Id == searchedUserId;
+
+                    <article
+                        class="sq-ranking-row @(isCurrentUser ? "sq-ranking-current" : "") @(isSearchedUser ? "sq-searched-player sq-search-target" : "")"
+                        data-user-id="@user.Id"
+                        id="player-@user.Id">
+
+                        <div class="sq-ranking-number">
+                            @rank.ToString("00")
+                        </div>
+
+                        <div class="sq-ranking-user">
+
+                            <div class="sq-ranking-avatar">
+
+                                @if (!string.IsNullOrWhiteSpace(user.ProfileImageUrl))
+                                {
+                                    <img src="@user.ProfileImageUrl"
+                                         alt="@user.UserName" />
+                                }
+                                else
+                                {
+                                    <span>
+                                        @(user.UserName?.Substring(0, 1).ToUpper() ?? "?")
+                                    </span>
+                                }
+
+                            </div>
+
+                            <div class="sq-ranking-user-info">
+
+                                <a
+                                    href="/Profile/@user.UserName"
+                                    class="sq-ranking-username">
+                                    @user.UserName
+                                </a>
+
+                                @if (isCurrentUser)
+                                {
+                                    <span class="sq-you-label">YOU</span>
+                                }
+
+                                @if (isSearchedUser)
+                                {
+                                    <span class="sq-ranking-search-label">
+                                        SEARCHED
+                                    </span>
+                                }
+
+                            </div>
+
+                        </div>
+
+                        
+
+
+                        <div class="sq-ranking-level">
+                            <span>LEVEL</span>
+                            <strong>@user.Level</strong>
+                        </div>
+
+
+                        <div class="sq-ranking-points">
+                            <strong>@user.Points</strong>
+                            <span>PTS</span>
+                        </div>
+
+                    </article>
+                }
+
+            </div>
+
+        </section>
+    }
+    else if (users.Count <= 3)
+    {
+        <section class="sq-ranking-small-note">
+            Showing the current top @users.Count players.
+        </section>
+    }
+}
+
+</div>
+
+
+}

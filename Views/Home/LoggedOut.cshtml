@@ -1,0 +1,744 @@
+﻿@using SideQuestApp.Models
+
+@{
+    var latestQuests =
+        ViewBag.LatestQuests as List<Quest>
+        ?? new List<Quest>();
+    
+
+    var featuredBadges =
+        ViewBag.FeaturedBadges as List<Badge>
+        ?? new List<Badge>();
+}
+
+<main class="sq-logged-out">
+
+
+<!-- HERO -->
+<section class="sq-lo-hero">
+
+    <div class="sq-lo-hero-content">
+
+        <p class="sq-lo-eyebrow">
+            SIDEQUEST / REAL LIFE
+        </p>
+
+        <h1>
+            Make ordinary days
+            <span>worth remembering.</span>
+        </h1>
+
+        <p class="sq-lo-hero-text">
+            SideQuest turns everyday life into something
+            worth doing. Choose a challenge, complete it
+            in the real world, prove it and build your story.
+        </p>
+
+        <div class="sq-lo-actions">
+
+            <a asp-area="Identity"
+               asp-page="/Account/Register"
+               class="sq-lo-button sq-lo-button-primary">
+                Start your SideQuest
+            </a>
+
+            <a asp-area="Identity"
+               asp-page="/Account/Login"
+               class="sq-lo-button sq-lo-button-secondary">
+                Log in
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="sq-lo-hero-side">
+        
+
+
+        <div class="sq-lo-hero-quest">
+
+            <div class="sq-lo-quest-top">
+                <span>
+                    TODAY'S SIDEQUEST
+                </span>
+
+                <span>
+                    +50 Points
+                </span>
+            </div>
+
+            <div class="sq-lo-quest-number">
+                01
+            </div>
+
+            <h2>
+                Take a different
+                way home.
+            </h2>
+
+            <p>
+                Explore somewhere you've never been.
+            </p>
+
+            <div class="sq-lo-quest-bottom">
+                <span>REAL WORLD</span>
+                <span>EASY</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- INTRO -->
+<section class="sq-lo-intro">
+
+    <div class="sq-lo-intro-label">
+        <span>01</span>
+        WHAT IS SIDEQUEST?
+        
+        <div class="sq-lo-intro-image">
+            <img src="images/camera.jpg"
+                 alt="Taking a photo during a SideQuest" />
+        </div>
+
+    </div>
+
+    
+    <div class="sq-lo-intro-content">
+
+        <h2>
+            A game where the
+            <span>world is the map.</span>
+        </h2>
+
+        <p>
+            No endless scrolling. No virtual worlds.
+            SideQuest gives you real things to do in
+            the real world.
+        </p>
+
+        <p>
+            Go somewhere new. Try something you've never
+            tried. Help someone. Make something. Challenge
+            yourself.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="sq-lo-how">
+
+    <div class="sq-lo-section-heading">
+
+        <p class="sq-lo-eyebrow">
+            HOW IT WORKS
+        </p>
+
+        <h2>
+            Four steps from
+            <span>idea to memory.</span>
+        </h2>
+
+    </div>
+
+
+    <div class="sq-lo-how-grid">
+
+        <article class="sq-lo-how-card">
+            <div class="sq-lo-how-image">
+                <img src="images/discover1.jpg"
+                     alt="Discover a new SideQuest" />
+            </div>
+            <span>01</span>
+           
+            <h3>
+                Discover
+            </h3>
+
+           
+
+            <p>
+                Find a quest that makes you want to
+                get up and actually do something.
+            </p>
+
+        </article>
+
+
+        <article class="sq-lo-how-card">
+            <div class="sq-lo-how-image">
+                <img src="images/doIt.jpg"
+                     alt="Completing a real life quest" />
+            </div>
+            <span>02</span>
+           
+            <h3>
+                Go do it
+            </h3>
+
+           
+
+            <p>
+                Leave the screen behind and complete
+                the challenge in real life.
+            </p>
+
+        </article>
+
+
+        <article class="sq-lo-how-card">
+            <div class="sq-lo-how-image">
+                <img src="images/proveIt.jpg"
+                     alt="Taking photo proof of a quest" />
+            </div>
+            <span>03</span>
+            
+            <h3>
+                Prove it
+            </h3>
+
+            
+
+            <p>
+                Upload photo proof and share what
+                happened with the community.
+            </p>
+
+        </article>
+
+
+        <article class="sq-lo-how-card">
+            <div class="sq-lo-how-image">
+                <img src="images/level1.jpg"
+                     alt="Leveling up after completing quests" />
+            </div>
+            <span>04</span>
+           
+            <h3>
+                Level up
+            </h3>
+
+           
+
+            <p>
+                Earn points, XP and badges as your
+                real-world story grows.
+            </p>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- QUESTS -->
+<section class="sq-lo-quests">
+
+    <div class="sq-lo-section-heading sq-lo-section-heading-wide">
+
+        <div>
+
+            <p class="sq-lo-eyebrow">
+                ON THE BOARD
+            </p>
+
+            <h2>
+                Things worth
+                <span>doing.</span>
+            </h2>
+
+        </div>
+
+        <p>
+            A glimpse at what's currently waiting
+            for SideQuest players.
+        </p>
+
+    </div>
+
+
+    @if (latestQuests.Any())
+    {
+        <div class="sq-lo-quest-grid">
+
+            @foreach (var quest in latestQuests.Take(3))
+            {
+                <article class="sq-lo-quest-card">
+                    
+                    
+                    <div class="sq-lo-card-top">
+
+                        <span>
+                            QUEST
+                        </span>
+
+                        @if (quest.Category != null)
+                        {
+                            <span>
+                                @quest.Category.Name
+                            </span>
+                        }
+
+                    </div>
+
+
+                    <div class="sq-lo-card-body">
+
+                        <h3>
+                            @quest.Title
+                        </h3>
+
+                        @if (!string.IsNullOrWhiteSpace(
+                            quest.Description))
+                        {
+                            <p>
+                                @quest.Description
+                            </p>
+                        }
+
+                    </div>
+
+
+                    <div class="sq-lo-card-footer">
+
+                        <span>
+                            @quest.Difficulty
+                        </span>
+
+                        <strong>
+                            +@quest.PointsReward XP
+                        </strong>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="sq-lo-empty">
+            New quests are coming soon.
+        </div>
+    }
+
+
+    <div class="sq-lo-protected-message">
+
+        <div>
+
+            <span>
+                THIS IS ONLY THE BEGINNING
+            </span>
+
+            <p>
+                Create an account to see the full quest
+                board and start completing challenges.
+            </p>
+
+        </div>
+
+        <a asp-area="Identity"
+           asp-page="/Account/Register">
+            Explore SideQuest
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- PROGRESSION -->
+<section class="sq-lo-progression">
+
+
+    <div class="sq-lo-progression-copy">
+
+        <p class="sq-lo-eyebrow">
+            PROGRESSION
+        </p>
+
+        <h2>
+            Your life gets
+            <span>a score.</span>
+        </h2>
+
+        <p>
+            Every approved quest gives you points.
+            Level up, collect achievements and slowly build
+            a record of everything you've actually done.
+        </p>
+
+    </div>
+
+
+    <div class="sq-lo-progression-list">
+
+        <div>
+            <strong>
+                Points
+            </strong>
+
+            <span>
+                Earned by completing quests
+            </span>
+        </div>
+
+        <div>
+            <strong>
+                LEVELS
+            </strong>
+
+            <span>
+                Progress that grows with you
+            </span>
+        </div>
+
+        <div>
+            <strong>
+                BADGES
+            </strong>
+
+            <span>
+                Milestones you can actually remember
+            </span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- BADGES -->
+<section class="sq-lo-badges">
+
+    <div class="sq-lo-section-heading">
+
+        <p class="sq-lo-eyebrow">
+            ACHIEVEMENTS
+        </p>
+
+        <h2>
+            Proof that you
+            <span>actually did it.</span>
+        </h2>
+
+    </div>
+
+
+    @if (featuredBadges.Any())
+    {
+        <div class="sq-lo-badge-grid">
+
+            @{
+                var badgeNumber = 0;
+            }
+
+            @foreach (var badge in featuredBadges.Take(4))
+            {
+                badgeNumber++;
+
+                string placeholderSymbol;
+
+                switch (badgeNumber % 8)
+                {
+                    case 1:
+                        placeholderSymbol = "01";
+                        break;
+                    case 2:
+                        placeholderSymbol = "02";
+                        break;
+                    case 3:
+                        placeholderSymbol = "03";
+                        break;
+                    case 4:
+                        placeholderSymbol = "04";
+                        break;
+                    case 5:
+                        placeholderSymbol = "05";
+                        break;
+                    case 6:
+                        placeholderSymbol = "06";
+                        break;
+                    case 7:
+                        placeholderSymbol = "07";
+                        break;
+                    default:
+                        placeholderSymbol = "08";
+                        break;
+                }
+
+                <article class="sq-lo-badge-card">
+
+                    <div class="sq-lo-badge-visual">
+
+                        <div class="sq-achievement-badge sq-achievement-locked">
+
+                            <div class="sq-achievement-badge-ring">
+
+                                <div class="sq-achievement-badge-inner">
+
+                                    @if (!string.IsNullOrWhiteSpace(
+                                        badge.IconUrl))
+                                    {
+                                        <img src="@badge.IconUrl"
+                                             alt="@badge.Name"
+                                             class="sq-achievement-icon" />
+                                    }
+                                    else
+                                    {
+                                        <div class="sq-achievement-placeholder">
+
+                                            <span>
+                                                @placeholderSymbol
+                                            </span>
+
+                                        </div>
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="sq-lo-badge-info">
+
+                        <h3>
+                            @badge.Name
+                        </h3>
+
+                        @if (!string.IsNullOrWhiteSpace(
+                            badge.Description))
+                        {
+                            <p>
+                                @badge.Description
+                            </p>
+                        }
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="sq-lo-empty">
+            Your first badge is waiting for you.
+        </div>
+    }
+
+</section>
+
+
+<!-- GROUPS -->
+<section class="sq-lo-groups">
+
+    <div class="sq-lo-groups-visual">
+        
+        <img src="images/group.jpg"
+             alt="Friends completing a SideQuest together" />
+
+        <div class="sq-lo-group-overlay">
+
+            <p>
+                GROUP QUESTS
+            </p>
+
+            <h3>
+                Some adventures
+                are better together.
+            </h3>
+
+            <span>
+                Create a group.
+                Invite your people.
+                Make your own quests.
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="sq-lo-groups-copy">
+
+        <p class="sq-lo-eyebrow">
+            GROUPS
+        </p>
+
+        <h2>
+            Your people.
+            <span>Your quests.</span>
+        </h2>
+
+        <p>
+            Groups are private spaces for friends and
+            communities. Share a join code and create
+            quests that only your group can see.
+        </p>
+
+        <div class="sq-lo-group-features">
+
+            <div>
+                <strong>
+                    CREATE
+                </strong>
+
+                <span>
+                    Start your own group
+                </span>
+            </div>
+
+            <div>
+                <strong>
+                    INVITE
+                </strong>
+
+                <span>
+                    Bring your people in
+                </span>
+            </div>
+
+            <div>
+                <strong>
+                    QUEST
+                </strong>
+
+                <span>
+                    Make challenges together
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- COMMUNITY STATS -->
+<section class="sq-lo-stats">
+
+    <div>
+
+        <strong>
+            @(ViewBag.ActiveQuestCount ?? 0)
+        </strong>
+
+        <span>
+            ACTIVE QUESTS
+        </span>
+
+    </div>
+
+    <div>
+
+        <strong>
+            @(ViewBag.TotalUsers ?? 0)
+        </strong>
+
+        <span>
+            PLAYERS
+        </span>
+
+    </div>
+
+    <div>
+
+        <strong>
+            @(ViewBag.TotalGroups ?? 0)
+        </strong>
+
+        <span>
+            GROUPS
+        </span>
+
+    </div>
+
+    <div>
+
+        <strong>
+            @(ViewBag.TotalApproved ?? 0)
+        </strong>
+
+        <span>
+            QUESTS COMPLETED
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- MANIFESTO -->
+<section class="sq-lo-manifesto">
+    
+
+
+    <div class="sq-lo-manifesto-content">
+
+        <p class="sq-lo-eyebrow">
+            THE SIDEQUEST PHILOSOPHY
+        </p>
+
+        <h2>
+            Don't collect things
+            <span>to do.</span>
+        </h2>
+
+        <h2>
+            Go do them.
+        </h2>
+
+        <p>
+            The best part of SideQuest doesn't happen on
+            the screen. It happens when you close it.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- FINAL CTA -->
+<section class="sq-lo-final">
+
+    <p class="sq-lo-eyebrow">
+        YOUR NEXT CHAPTER
+    </p>
+
+    <h2>
+        Make today
+        <span>count.</span>
+    </h2>
+
+    <p>
+        Your first SideQuest is one decision away.
+    </p>
+
+    <a asp-area="Identity"
+       asp-page="/Account/Register"
+       class="sq-lo-button sq-lo-button-primary">
+        Create your account
+    </a>
+
+</section>
+
+
+</main>

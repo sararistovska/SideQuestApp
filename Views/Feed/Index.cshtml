@@ -1,0 +1,365 @@
+﻿@model IEnumerable<SideQuestApp.Models.QuestCompletion>
+
+@{
+    ViewData["Title"] = "Feed";
+
+    var posts = Model.ToList();
+    var currentUserId = ViewBag.CurrentUserId as string;
+
+    var totalLikes = posts.Sum(p => p.Likes?.Count ?? 0);
+    var totalPosts = posts.Count;
+
+    var latestPost = posts.FirstOrDefault();
+}
+
+<div class="sq-feed-page">
+
+    <!-- FEED HERO -->
+
+    <section class="sq-feed-hero">
+
+        <div class="sq-feed-hero-main">
+
+            <div class="sq-feed-eyebrow">
+                <span class="sq-feed-live-dot"></span>
+                SIDEQUEST COMMUNITY
+            </div>
+
+            <h1>
+                Life is<br />
+                happening.
+            </h1>
+
+            <p>
+                See what the SideQuest community is doing,
+                discover new adventures and leave your mark.
+            </p>
+
+        </div>
+
+
+        <div class="sq-feed-hero-side">
+
+            <div class="sq-feed-pulse">
+
+                <div class="sq-feed-pulse-heading">
+                    <span>COMMUNITY PULSE</span>
+                    <span>LIVE</span>
+                </div>
+
+                <div class="sq-feed-pulse-stats">
+
+                    <div>
+                        <strong>@totalPosts</strong>
+                        <span>QUESTS SHARED</span>
+                    </div>
+
+                    <div>
+                        <strong>@totalLikes</strong>
+                        <span>LIKES GIVEN</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <a asp-controller="Quest"
+               asp-action="Index"
+               class="sq-feed-start-quest">
+
+                <span>Find something to do</span>
+
+                <strong>
+                    Explore quests
+                </strong>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    @if (!posts.Any())
+    {
+        <section class="sq-feed-empty">
+
+            <div class="sq-feed-empty-mark">
+                +
+            </div>
+
+            <span class="sq-section-kicker">
+                THE COMMUNITY IS QUIET
+            </span>
+
+            <h2>
+                Be the first story.
+            </h2>
+
+            <p>
+                Complete a quest, get approved,
+                and your adventure will appear here.
+            </p>
+
+            <a asp-controller="Quest"
+               asp-action="Index"
+               class="sq-button sq-button-primary">
+                Explore quests
+            </a>
+
+        </section>
+    }
+    else
+    {
+        <!-- FEED BAR -->
+
+        <div class="sq-feed-bar">
+
+            <div class="sq-feed-bar-title">
+
+                <span class="sq-section-kicker">
+                    FROM THE COMMUNITY
+                </span>
+
+                <h2>
+                    Recent adventures
+                </h2>
+
+            </div>
+
+            <div class="sq-feed-bar-meta">
+
+                <span>
+                    @totalPosts MOMENTS
+                </span>
+
+                <span>
+                    NEWEST FIRST
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- SOCIAL POSTS -->
+
+        <main class="sq-feed-posts">
+
+            @for (int i = 0; i < posts.Count; i++)
+            {
+                var post = posts[i];
+                var user = post.User;
+                var quest = post.Quest;
+
+                if (user == null || quest == null)
+                {
+                    continue;
+                }
+
+                var likeCount =
+                    post.Likes?.Count ?? 0;
+
+                var isLiked =
+                    currentUserId != null &&
+                    post.Likes != null &&
+                    post.Likes.Any(
+                        x => x.UserId == currentUserId
+                    );
+
+                var isEven = i % 2 == 1;
+
+
+                <article class="sq-feed-post @(isEven ? "sq-feed-post-reverse" : "")">
+
+                    <!-- POST NUMBER -->
+
+                    <div class="sq-feed-post-index">
+                        @((i + 1).ToString("00"))
+                    </div>
+
+
+                    <!-- POST CONTENT -->
+
+                    <div class="sq-feed-post-content">
+
+                        <!-- USER -->
+
+                        <div class="sq-feed-post-user">
+
+                            <a href="/Profile/@user.UserName"
+                               class="sq-feed-profile">
+
+                                <div class="sq-feed-avatar">
+
+                                    @if (!string.IsNullOrWhiteSpace(
+                                        user.ProfileImageUrl))
+                                    {
+                                        <img src="@user.ProfileImageUrl"
+                                             alt="@user.UserName" />
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            @(string.IsNullOrWhiteSpace(user.UserName)
+                                                ? "?"
+                                                : user.UserName.Substring(0, 1).ToUpper())
+                                        </span>
+                                    }
+
+                                </div>
+
+
+                                <div class="sq-feed-user-text">
+
+                                    <strong>
+                                        @user.UserName
+                                    </strong>
+
+                                    <span>
+                                        completed a quest
+                                    </span>
+
+                                </div>
+
+                            </a>
+
+
+                            <time>
+                                @((post.ReviewedAt ?? post.SubmittedAt)
+                                    .ToLocalTime()
+                                    .ToString("dd MMM · HH:mm"))
+                            </time>
+
+                        </div>
+
+
+                        <!-- QUEST INFO -->
+
+                        <div class="sq-feed-quest-info">
+
+                            <div class="sq-feed-meta">
+
+                                @if (quest.Category != null)
+                                {
+                                    <span>
+                                        @quest.Category.Name
+                                    </span>
+                                }
+
+                                <span>
+                                    @quest.Difficulty
+                                </span>
+
+                            </div>
+
+
+                            <a asp-controller="Quest"
+                               asp-action="Details"
+                               asp-route-id="@quest.Id"
+                               class="sq-feed-quest-name">
+
+                                @quest.Title
+
+                            </a>
+
+
+                            @if (!string.IsNullOrWhiteSpace(post.Caption))
+                            {
+                                <p class="sq-feed-post-caption">
+                                    @post.Caption
+                                </p>
+                            }
+
+                        </div>
+
+
+                        <!-- PHOTO -->
+
+                        <a asp-controller="Quest"
+                           asp-action="Details"
+                           asp-route-id="@quest.Id"
+                           class="sq-feed-image">
+
+                            <img src="@post.PhotoUrl"
+                                 alt="Proof for @quest.Title" />
+
+                            <span class="sq-feed-image-tag">
+                                VERIFIED
+                            </span>
+
+                        </a>
+
+
+                        <!-- FOOTER -->
+
+                        <div class="sq-feed-post-footer">
+
+                            <div class="sq-feed-post-actions">
+
+                                <form class="sq-like-form"
+                                      data-completion-id="@post.Id">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="button"
+                                            class="sq-like-button @(isLiked ? "sq-liked" : "")"
+                                            data-liked="@isLiked.ToString().ToLower()">
+
+                                        <span class="sq-like-symbol">
+                                            @(isLiked ? "♥" : "♡")
+                                        </span>
+
+                                        <span class="sq-like-count">
+                                            @likeCount
+                                        </span>
+
+                                        <span class="sq-like-label">
+                                            likes
+                                        </span>
+
+                                    </button>
+
+                                </form>
+
+
+                                <a asp-controller="Quest"
+                                   asp-action="Details"
+                                   asp-route-id="@quest.Id"
+                                   class="sq-feed-comment-link">
+
+                                    View quest
+
+                                </a>
+
+                            </div>
+
+
+                            <div class="sq-feed-reward">
+
+                                <span>
+                                    QUEST REWARD
+                                </span>
+
+                                <strong>
+                                    +@quest.PointsReward
+                                </strong>
+
+                                <small>
+                                    PTS
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            }
+
+        </main>
+    }
+
+</div>

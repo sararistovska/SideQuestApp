@@ -1,0 +1,81 @@
+@model SideQuestApp.Models.Category
+
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<div class="sq-category-form-page">
+    
+    <a asp-controller="Category"
+       asp-action="Index"
+       class="sq-back-link">
+        Back to categories
+    </a>
+
+    <div class="sq-category-form-header">
+        <span class="sq-label">ADMIN · CATEGORIES</span>
+        <h1>Edit category</h1>
+        <p>
+            Update the name or description of this quest category.
+        </p>
+    </div>
+
+    <div class="sq-category-form-card">
+
+        <div class="sq-category-admin-mark">
+            EDIT CATEGORY
+        </div>
+
+        <form asp-action="Edit" method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="Id"/>
+
+            <div asp-validation-summary="ModelOnly"
+                 class="sq-category-form-error"></div>
+
+            <div class="sq-category-form-group">
+                <label asp-for="Name"></label>
+
+                <input asp-for="Name"/>
+
+                <span asp-validation-for="Name"
+                      class="sq-category-form-error"></span>
+            </div>
+
+            <div class="sq-category-form-group">
+                <label asp-for="Description"></label>
+
+                <textarea asp-for="Description"></textarea>
+
+                <span asp-validation-for="Description"
+                      class="sq-category-form-error"></span>
+            </div>
+
+            <div class="sq-category-form-actions">
+
+                <a asp-action="Details"
+                   asp-route-id="@Model.Id"
+                   class="sq-category-form-cancel">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="sq-button sq-button-primary">
+                    Save changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

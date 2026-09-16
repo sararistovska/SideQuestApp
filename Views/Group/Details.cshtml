@@ -1,0 +1,404 @@
+﻿@model SideQuestApp.Models.Group
+
+@{
+    ViewData["Title"] = Model.Name;
+
+    var isCreator = ViewBag.IsCreator == true;
+
+    var initial =
+        string.IsNullOrWhiteSpace(Model.Name)
+            ? "G"
+            : Model.Name.Substring(0, 1).ToUpper();
+}
+
+<div class="sq-group-details-page">
+    <a asp-controller="Group"
+       asp-action="Index"
+       class="sq-back-link">
+        Back to groups
+    </a>
+
+    <section class="sq-group-details-hero">
+
+        <div class="sq-group-details-main">
+
+
+            <div class="sq-group-large-mark">
+                @initial
+            </div>
+
+            <span class="sq-section-eyebrow">
+                PRIVATE GROUP
+            </span>
+
+            <h1>
+                @Model.Name
+            </h1>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p>
+                    @Model.Description
+                </p>
+            }
+
+            <div class="sq-group-hero-meta">
+
+                <span>
+                    @Model.Memberships.Count
+                    @(Model.Memberships.Count == 1 ? "MEMBER" : "MEMBERS")
+                </span>
+
+                <span>
+                    @Model.Quests.Count
+                    @(Model.Quests.Count == 1 ? "QUEST" : "QUESTS")
+                </span>
+
+                @if (Model.CreatedByUser != null)
+                {
+                    <span>
+                        CREATED BY
+                        <a href="/Profile/@Model.CreatedByUser.UserName"
+                           class="sq-member-username">
+                            @Model.CreatedByUser.UserName
+                        </a>
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="sq-group-invite-card">
+
+            <span class="sq-section-eyebrow">
+                INVITE YOUR FRIENDS
+            </span>
+
+            <h3>
+                Join with a code.
+            </h3>
+
+            <div class="sq-invite-code"
+                 id="inviteCode">
+                @Model.InviteCode
+            </div>
+
+            <p>
+                Share this code with someone you want to add
+                to the group.
+            </p>
+
+            <button type="button"
+                    class="sq-button sq-button-primary"
+                    id="copyInviteCode"
+                    data-code="@Model.InviteCode">
+                Copy invite code
+            </button>
+
+        </div>
+
+    </section>
+
+
+    @if (isCreator)
+    {
+        <div class="sq-group-admin-bar">
+
+            <div>
+                <strong>
+                    Group controls
+                </strong>
+
+                <span class="sq-muted">
+                    You created this group.
+                </span>
+            </div>
+
+            <a asp-action="CreateQuest"
+               asp-route-id="@Model.Id"
+               class="sq-button sq-button-primary">
+                Create group quest
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <div class="sq-group-admin-bar">
+
+            <div>
+                <strong>
+                    Group quests
+                </strong>
+
+                <span class="sq-muted">
+                    Create quests for everyone in this group.
+                </span>
+            </div>
+
+            <a asp-action="CreateQuest"
+               asp-route-id="@Model.Id"
+               class="sq-button sq-button-primary">
+                Create group quest
+            </a>
+
+        </div>
+    }
+
+
+    <div class="sq-group-details-grid">
+
+        <section>
+
+            <div class="sq-section-heading">
+
+                <div>
+                    <span class="sq-section-eyebrow">
+                        GROUP QUESTS
+                    </span>
+
+                    <h2>
+                        Things to do together.
+                    </h2>
+                </div>
+
+                <span class="sq-group-count">
+                    @Model.Quests.Count
+                    @(Model.Quests.Count == 1 ? "QUEST" : "QUESTS")
+                </span>
+
+            </div>
+
+
+            @if (Model.Quests.Any())
+            {
+                <div class="sq-group-quests">
+
+                    @foreach (var quest in Model.Quests)
+                    {
+                        <article class="sq-group-quest-card">
+
+                            <div class="sq-group-quest-top">
+
+                                <span class="sq-quest-category">
+                                    @(quest.Category?.Name ?? "Quest")
+                                </span>
+
+                                <span class="sq-quest-difficulty">
+                                    @quest.Difficulty
+                                </span>
+
+                            </div>
+
+
+                            <h3>
+                                @quest.Title
+                            </h3>
+
+
+                            @if (!string.IsNullOrWhiteSpace(quest.Description))
+                            {
+                                <p>
+                                    @quest.Description
+                                </p>
+                            }
+
+
+                            <div class="sq-group-quest-footer">
+
+                                <span>
+                                    +@quest.PointsReward XP
+                                </span>
+
+                                <a asp-controller="Quest"
+                                   asp-action="GroupQuestDetails"
+                                   asp-route-id="@quest.Id">
+                                    View quest
+                                </a>
+
+                            </div>
+
+                        </article>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="sq-empty-state sq-empty-state-small">
+
+                    <span class="sq-section-eyebrow">
+                        NO QUESTS YET
+                    </span>
+
+                    <h3>
+                        Give the group something to do.
+                    </h3>
+
+                    <p>
+                        Create the first quest for your group.
+                    </p>
+
+                    <div class="sq-empty-actions">
+
+                        <a asp-action="CreateQuest"
+                           asp-route-id="@Model.Id"
+                           class="sq-button sq-button-primary">
+                            Create quest
+                        </a>
+
+                    </div>
+
+                </div>
+            }
+
+        </section>
+
+
+        <aside class="sq-group-members-section">
+
+            <div class="sq-section-heading">
+
+                <div>
+                    <span class="sq-section-eyebrow">
+                        THE GROUP
+                    </span>
+
+                    <h2>
+                        Members.
+                    </h2>
+                </div>
+
+            </div>
+
+
+            <div class="sq-members-list">
+
+                @foreach (var membership in Model.Memberships)
+                {
+                    var member = membership.User;
+
+                    if (member == null)
+                    {
+                        continue;
+                    }
+
+                    var memberInitial =
+                        string.IsNullOrWhiteSpace(member.UserName)
+                            ? "?"
+                            : member.UserName.Substring(0, 1).ToUpper();
+
+                    var isMemberCreator =
+                        member.Id == Model.CreatedByUserId;
+
+                    <div class="sq-member-row">
+
+                        <div class="sq-member-avatar">
+                            @memberInitial
+                        </div>
+
+                        <div class="sq-member-info">
+
+                            <a href="/Profile/@member.UserName"
+                               class="sq-member-username">
+                                @member.UserName
+                            </a>
+
+                            @if (isMemberCreator)
+                            {
+                                <span class="sq-member-role">
+                                    Creator
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="sq-member-role">
+                                    Member
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+
+            @if (isCreator)
+            {
+                <div style="margin-top: 25px;">
+
+                    <a asp-action="Delete"
+                       asp-route-id="@Model.Id"
+                       class="sq-button sq-button-danger"
+                       style="width:100%; box-sizing:border-box;">
+                        Delete group
+                    </a>
+
+                </div>
+            }
+
+        </aside>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const button = document.getElementById("copyInviteCode");
+
+            if (!button) {
+                return;
+            }
+
+            button.addEventListener("click", async function () {
+
+                const code = button.dataset.code;
+
+                if (!code) {
+                    return;
+                }
+
+                try {
+                    await navigator.clipboard.writeText(code);
+
+                    const originalText = button.textContent;
+
+                    button.textContent = "Copied";
+
+                    setTimeout(function () {
+                        button.textContent = originalText;
+                    }, 1800);
+
+                } catch {
+                    const temporaryInput =
+                        document.createElement("input");
+
+                    temporaryInput.value = code;
+
+                    document.body.appendChild(temporaryInput);
+                    temporaryInput.select();
+
+                    document.execCommand("copy");
+                    temporaryInput.remove();
+
+                    const originalText = button.textContent;
+
+                    button.textContent = "Copied";
+
+                    setTimeout(function () {
+                        button.textContent = originalText;
+                    }, 1800);
+                }
+
+            });
+
+        });
+    </script>
+}

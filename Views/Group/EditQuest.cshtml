@@ -1,0 +1,155 @@
+﻿
+@model SideQuestApp.Models.Quest
+
+@{
+    ViewData["Title"] = "Edit Quest";
+}
+
+<div class="sq-group-form-page">
+
+    <div class="sq-group-form-header">
+        
+        <a asp-action="Details"
+           asp-route-id="@Model.Id"
+           class="sq-back-link">
+            Back to group
+        </a>
+
+        <span class="sq-section-eyebrow">
+            GROUP QUEST
+        </span>
+
+        <h1>
+            Edit quest
+        </h1>
+
+        <p>
+            Update the quest for <strong>@ViewBag.GroupName</strong>.
+        </p>
+
+    </div>
+
+
+    <div class="sq-group-form-card">
+
+        <form asp-action="EditQuest"
+              asp-controller="Group"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden"
+                   name="id"
+                   value="@Model.Id" />
+
+
+            <div class="sq-form-field">
+
+                <label for="title">
+                    Quest title
+                </label>
+
+                <input type="text"
+                       id="title"
+                       name="title"
+                       value="@Model.Title"
+                       maxlength="150"
+                       required />
+
+                <div class="sq-form-help">
+                    Give your quest a short, memorable name.
+                </div>
+
+                @Html.ValidationMessage(
+                    "title",
+                    null,
+                    new { @class = "sq-field-error" })
+
+            </div>
+
+
+            <div class="sq-form-field">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea id="description"
+                          name="description"
+                          rows="6"
+                          maxlength="1000"
+                          placeholder="What does everyone need to do?">@Model.Description</textarea>
+
+                <div class="sq-form-help">
+                    Add any details or rules your group should know.
+                </div>
+
+                @Html.ValidationMessage(
+                    "description",
+                    null,
+                    new { @class = "sq-field-error" })
+
+            </div>
+
+
+            <div class="sq-form-field">
+
+                <label for="pointsReward">
+                    Points reward
+                </label>
+
+                <input type="number"
+                       id="pointsReward"
+                       name="pointsReward"
+                       value="@Model.PointsReward"
+                       min="1"
+                       required />
+
+                <div class="sq-form-help">
+                    Decide how many points members earn when the quest is completed.
+                </div>
+
+                @Html.ValidationMessage(
+                    "pointsReward",
+                    null,
+                    new { @class = "sq-field-error" })
+
+            </div>
+
+
+            <div class="sq-group-form-note">
+
+                <strong>
+                    Group-only quest
+                </strong>
+
+                <p>
+                    Group quests do not use categories, prerequisites,
+                    or difficulty requirements.
+                </p>
+
+            </div>
+
+
+            <div class="sq-form-actions">
+
+                <a asp-controller="Quest"
+                   asp-action="GroupQuestDetails"
+                   asp-route-id="@Model.Id"
+                   class="sq-button sq-button-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="sq-button sq-button-primary">
+                    Save changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+

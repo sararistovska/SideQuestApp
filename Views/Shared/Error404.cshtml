@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Quest Not Found";
+}
+<body class="dark-mode">
+
+<div class="sq-404-page">
+
+    
+    <div class="sq-404-content">
+
+        <div class="sq-404-number">
+            404
+        </div>
+
+        <div class="sq-section-eyebrow">
+            QUEST NOT FOUND
+        </div>
+
+        <h1>
+            Looks like you took<br />
+            a wrong turn.
+        </h1>
+
+        <p>
+            This quest doesn't exist, may have moved,
+            or simply isn't part of your journey anymore.
+        </p>
+
+        <div class="sq-404-actions">
+            <a asp-controller="Quest"
+               asp-action="Index"
+               class="sq-404-primary">
+                Explore quests
+            </a>
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="sq-404-secondary">
+                Back home
+            </a>
+        </div>
+
+    </div>
+
+    <div class="sq-404-decoration" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    
+
+</div>
+</body>

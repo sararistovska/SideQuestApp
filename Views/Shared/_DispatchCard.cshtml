@@ -1,0 +1,58 @@
+﻿@model SideQuestApp.Models.QuestCompletion
+
+@{
+    var currentUserId = ViewBag.CurrentUserId as string;
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
+
+<div class="dispatch-card">
+
+    <div class="dispatch-postmark">
+
+        <span class="dispatch-date">
+            @Model.SubmittedAt.ToString("MMM d")
+        </span>
+
+        <span class="dispatch-year">
+            @Model.SubmittedAt.ToString("yyyy")
+        </span>
+
+    </div>
+
+
+    <img src="@Model.PhotoUrl"
+         class="dispatch-photo"
+         alt="Quest completion by @Model.User?.UserName" />
+
+
+    <div class="dispatch-body">
+
+        <p class="dispatch-byline">
+
+            <a asp-controller="Home"
+               asp-action="Profile"
+               asp-route-id="@Model.UserId">
+
+                @Model.User?.UserName
+
+            </a>
+
+            completed
+
+            <strong>
+                @Model.Quest?.Title
+            </strong>
+
+        </p>
+
+
+        @if (!string.IsNullOrWhiteSpace(Model.Caption))
+        {
+            <p class="dispatch-caption">
+                @Model.Caption
+            </p>
+        }
+
+    </div>
+
+</div>

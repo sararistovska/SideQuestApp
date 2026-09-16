@@ -1,0 +1,201 @@
+﻿
+@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="sq-auth-page">
+
+    <div class="sq-auth-shell">
+
+        <div class="sq-auth-form-side">
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="sq-auth-logo">
+                SIDE<span>QUEST</span>
+            </a>
+
+            <div class="sq-auth-form-content">
+
+                <div class="sq-auth-kicker">
+                    WELCOME BACK
+                </div>
+
+                <h1 class="sq-auth-title">
+                    Ready for<br />
+                    your next quest?
+                </h1>
+
+                <p class="sq-auth-subtitle">
+                    Log in and continue turning ordinary days
+                    into something worth remembering.
+                </p>
+
+                <form id="account"
+                      method="post"
+                      class="sq-auth-form">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="sq-auth-validation"
+                         role="alert"></div>
+
+                    <div class="sq-auth-field">
+
+                        <label asp-for="Input.Email">
+                            Email
+                        </label>
+
+                        <input asp-for="Input.Email"
+                               autocomplete="email"
+                               aria-required="true"
+                               placeholder="you@example.com" />
+
+                        <span asp-validation-for="Input.Email"
+                              class="sq-auth-field-error"></span>
+
+                    </div>
+
+                    <div class="sq-auth-field">
+
+                        <div class="sq-auth-label-row">
+
+                            <label asp-for="Input.Password">
+                                Password
+                            </label>
+                            
+
+                        </div>
+
+                        <input asp-for="Input.Password"
+                               autocomplete="current-password"
+                               aria-required="true"
+                               placeholder="Enter your password" />
+
+                        <span asp-validation-for="Input.Password"
+                              class="sq-auth-field-error"></span>
+
+                    </div>
+
+                    <div class="sq-auth-options">
+
+                        <label asp-for="Input.RememberMe"
+                               class="sq-auth-checkbox">
+
+                            <input asp-for="Input.RememberMe" />
+
+                            <span class="sq-auth-checkbox-box"></span>
+
+                            <span>Remember me</span>
+
+                        </label>
+
+                    </div>
+
+                    <button id="login-submit"
+                            type="submit"
+                            class="sq-auth-submit">
+
+                        <span>Log in</span>
+
+                    </button>
+
+                </form>
+
+                @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                {
+                    <div class="sq-auth-divider">
+                        <span>or continue with</span>
+                    </div>
+
+                    <form id="external-account"
+                          asp-page="./ExternalLogin"
+                          asp-route-returnUrl="@Model.ReturnUrl"
+                          method="post"
+                          class="sq-auth-external-form">
+
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit"
+                                    class="sq-auth-external-button"
+                                    name="provider"
+                                    value="@provider.Name">
+                                @provider.DisplayName
+                            </button>
+                        }
+
+                    </form>
+                }
+
+                <div class="sq-auth-switch">
+
+                    <span>New to SideQuest?</span>
+
+                    <a asp-page="./Register"
+                       asp-route-returnUrl="@Model.ReturnUrl">
+                        Create an account
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="sq-auth-visual-side">
+
+            <div class="sq-auth-visual-top">
+                <span>REAL LIFE.</span>
+                <span>REAL QUESTS.</span>
+            </div>
+
+            <div class="sq-auth-visual-main">
+
+                <div class="sq-auth-mark">
+                    SQ
+                </div>
+
+                <h2>
+                    Your life<br />
+                    is the game.
+                </h2>
+
+                <p>
+                    Complete things that matter.
+                    Collect experiences.
+                    Find your people.
+                </p>
+
+            </div>
+
+            <div class="sq-auth-visual-bottom">
+
+                <div>
+                    <span class="sq-auth-stat-number">01</span>
+                    <span class="sq-auth-stat-label">START</span>
+                </div>
+
+                <div>
+                    <span class="sq-auth-stat-number">02</span>
+                    <span class="sq-auth-stat-label">EXPLORE</span>
+                </div>
+
+                <div>
+                    <span class="sq-auth-stat-number">03</span>
+                    <span class="sq-auth-stat-label">LIVE IT</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

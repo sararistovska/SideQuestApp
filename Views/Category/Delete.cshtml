@@ -1,0 +1,83 @@
+@model SideQuestApp.Models.Category
+
+@{
+    ViewData["Title"] = "Delete Category";
+}
+
+<div class="sq-category-delete-page">
+    <a asp-controller="Category"
+       asp-action="Index"
+       class="sq-back-link">
+        Back to categories
+    </a>
+
+    <div class="sq-category-delete-header">
+        <span class="sq-label">ADMIN · CATEGORIES</span>
+        <h1>Delete category</h1>
+        <p>
+            This action cannot be undone.
+        </p>
+    </div>
+
+    <div class="sq-category-delete-card">
+
+        <div class="sq-category-delete-index">
+            @Model.Id.ToString("00")
+        </div>
+
+        <div class="sq-category-delete-content">
+
+            <span class="sq-category-delete-warning">
+                DELETE CATEGORY
+            </span>
+
+            <h2>@Model.Name</h2>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p>@Model.Description</p>
+            }
+
+            <div class="sq-category-delete-meta">
+                <strong>@Model.Quests.Count</strong>
+                <span>
+                    @(Model.Quests.Count == 1
+                        ? "quest belongs to this category"
+                        : "quests belong to this category")
+                </span>
+            </div>
+
+            @if (Model.Quests.Any())
+            {
+                <div class="sq-category-delete-note">
+                    This category currently has quests associated with it.
+                    Make sure deleting it is intended.
+                </div>
+            }
+
+            <form asp-action="Delete"
+                  method="post"
+                  class="sq-category-delete-actions">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="Id"/>
+
+                <a asp-action="Details"
+                   asp-route-id="@Model.Id"
+                   class="sq-category-form-cancel">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="sq-category-delete-button">
+                    Delete category
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

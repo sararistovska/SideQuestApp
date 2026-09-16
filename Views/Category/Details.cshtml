@@ -1,0 +1,142 @@
+@model SideQuestApp.Models.Category
+
+@{
+    ViewData["Title"] = Model.Name;
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<div class="sq-category-details-page">
+    
+    <a asp-controller="Category"
+       asp-action="Index"
+       class="sq-back-link">
+        Back to categories
+    </a>
+
+    <div class="sq-category-details-top">
+        <a asp-action="Index" class="sq-category-back">
+            Categories
+        </a>
+    </div>
+
+    <div class="sq-category-details-hero">
+
+        <div class="sq-category-details-index">
+            @Model.Id.ToString("00")
+        </div>
+
+        <div class="sq-category-details-content">
+            <span class="sq-label">QUEST CATEGORY</span>
+
+            <h1>@Model.Name</h1>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p>@Model.Description</p>
+            }
+
+            <div class="sq-category-details-meta">
+                <strong>@Model.Quests.Count</strong>
+                <span>
+                    @(Model.Quests.Count == 1 ? "available quest" : "available quests")
+                </span>
+            </div>
+
+            @if (isAdmin)
+            {
+                <div class="sq-category-details-actions">
+
+                    <a asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="sq-button sq-button-primary">
+                        Edit category
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@Model.Id"
+                       class="sq-category-delete-link">
+                        Delete
+                    </a>
+
+                </div>
+            }
+        </div>
+
+    </div>
+
+
+    <section class="sq-category-quests">
+
+        <div class="sq-category-section-heading">
+            <div>
+                <span class="sq-label">IN THIS CATEGORY</span>
+                <h2>Quests</h2>
+            </div>
+
+            <div class="sq-category-section-right">
+
+                @if (isAdmin)
+                {
+                    <a asp-controller="Quest"
+                       asp-action="Create"
+                       asp-route-categoryId="@Model.Id"
+                       class="sq-category-add-quest">
+                        + Add quest
+                    </a>
+                }
+
+                <span class="sq-category-quest-count">
+                    @Model.Quests.Count
+                </span>
+
+            </div>
+        </div>
+
+        @if (Model.Quests.Any())
+        {
+            <div class="sq-category-quest-list">
+
+                @foreach (var quest in Model.Quests)
+                {
+                    <a asp-controller="Quest"
+                       asp-action="Details"
+                       asp-route-id="@quest.Id"
+                       class="sq-category-quest">
+
+                        <div class="sq-category-quest-index">
+                            @quest.Id.ToString("00")
+                        </div>
+
+                        <div class="sq-category-quest-info">
+                            <h3>@quest.Title</h3>
+
+                            @if (!string.IsNullOrWhiteSpace(quest.Description))
+                            {
+                                <p>@quest.Description</p>
+                            }
+                        </div>
+
+                        <div class="sq-category-quest-points">
+                            <strong>@quest.PointsReward</strong>
+                            <span>PTS</span>
+                        </div>
+
+                    </a>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="sq-category-no-quests">
+                <h3>No quests in this category yet.</h3>
+                <p>
+                    Once quests are added to this category,
+                    they will appear here.
+                </p>
+            </div>
+        }
+
+    </section>
+
+</div>

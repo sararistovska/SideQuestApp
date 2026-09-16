@@ -1,0 +1,167 @@
+﻿@model IEnumerable<SideQuestApp.Models.Group>
+
+@{
+    ViewData["Title"] = "Groups";
+}
+
+<div class="sq-groups-page">
+
+    <section class="sq-groups-hero">
+
+        <div>
+            <span class="sq-section-eyebrow">YOUR PEOPLE</span>
+
+            <h1>Groups</h1>
+
+            <p>
+                Create a private space for your friends, share quests,
+                and complete things together.
+            </p>
+        </div>
+
+        <div class="sq-groups-actions">
+
+            <a asp-action="JoinByCode"
+               class="sq-button sq-button-secondary">
+                Join a group
+            </a>
+
+            <a asp-action="Create"
+               class="sq-button sq-button-primary">
+                Create group
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <section>
+
+        <div class="sq-section-heading">
+
+            <div>
+                <span class="sq-section-eyebrow">YOUR GROUPS</span>
+
+                <h2>Places to play.</h2>
+            </div>
+
+            <span class="sq-group-count">
+                @Model.Count() GROUP@(Model.Count() == 1 ? "" : "S")
+            </span>
+
+        </div>
+
+
+        @if (Model.Any())
+        {
+            <div class="sq-groups-grid">
+
+                @foreach (var group in Model)
+                {
+                    var initial =
+                        string.IsNullOrWhiteSpace(group.Name)
+                            ? "G"
+                            : group.Name.Substring(0, 1).ToUpper();
+
+                    <article class="sq-group-card">
+
+                        <div class="sq-group-card-top">
+
+                            <div class="sq-group-mark">
+                                @initial
+                            </div>
+
+                            <span class="sq-group-members">
+                                @group.Memberships.Count
+                                @(group.Memberships.Count == 1 ? "member" : "members")
+                            </span>
+
+                        </div>
+
+
+                        <div class="sq-group-card-content">
+
+                            <h3>
+                                @group.Name
+                            </h3>
+
+                            @if (!string.IsNullOrWhiteSpace(group.Description))
+                            {
+                                <p>
+                                    @group.Description
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    A private SideQuest group for friends and shared adventures.
+                                </p>
+                            }
+
+                        </div>
+
+
+                        <div class="sq-group-card-meta">
+
+                            <span>
+                                Created by
+                                @(group.CreatedByUser?.UserName ?? "Unknown")
+                            </span>
+
+                            <span>
+                                @group.Quests.Count
+                                @(group.Quests.Count == 1 ? "quest" : "quests")
+                            </span>
+
+                        </div>
+
+
+                        <a asp-action="Details"
+                           asp-route-id="@group.Id"
+                           class="sq-group-card-link">
+                            View group
+                        </a>
+
+                    </article>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="sq-empty-state">
+
+                <span class="sq-section-eyebrow">
+                    NOTHING HERE YET
+                </span>
+
+                <h3>
+                    Start your first group.
+                </h3>
+
+                <p>
+                    Create a private space for your friends and start
+                    making your own group quests.
+                </p>
+
+                <div class="sq-empty-actions">
+
+                    <a asp-action="Create"
+                       class="sq-button sq-button-primary">
+                        Create group
+                    </a>
+
+                    <a asp-action="JoinByCode"
+                       class="sq-button sq-button-secondary">
+                        Join with code
+                    </a>
+
+                </div>
+
+            </div>
+        }
+
+    </section>
+
+</div>

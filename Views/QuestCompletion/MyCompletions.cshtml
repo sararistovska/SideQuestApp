@@ -1,0 +1,210 @@
+﻿@model IEnumerable<SideQuestApp.Models.QuestCompletion>
+
+@{
+ViewData["Title"] = "My Completions";
+
+var completions = Model.ToList();
+
+}
+
+<div class="sq-my-completions-page">
+    
+<!-- HEADER -->
+
+<a asp-controller="Quest"
+   asp-action="Index"
+   class="sq-back-link">
+    Back to quests
+</a>
+
+
+<div class="sq-my-completions-header">
+
+    <div>
+
+        <div class="sq-section-eyebrow">
+            YOUR ACTIVITY
+        </div>
+
+        <h1>
+            My completions.
+        </h1>
+
+        <p>
+            Keep track of the quests you've completed,
+            your submissions, and the moments you proved it.
+        </p>
+
+    </div>
+
+
+    <a asp-action="Create"
+       class="sq-my-completions-submit">
+        Submit New Completion
+    </a>
+
+</div>
+
+
+<!-- EMPTY STATE -->
+
+@if (!completions.Any())
+{
+    <div class="sq-my-completions-empty">
+
+        <div class="sq-my-completions-empty-mark">
+            +
+        </div>
+
+        <div>
+
+            <div class="sq-section-eyebrow">
+                NOTHING HERE YET
+            </div>
+
+            <h2>
+                Your first quest is waiting.
+            </h2>
+
+            <p>
+                Complete a quest in real life and submit your
+                photo proof to start building your activity.
+            </p>
+
+            <a asp-action="Create"
+               class="sq-my-completions-empty-link">
+                Submit a completion
+            </a>
+
+        </div>
+
+    </div>
+}
+else
+{
+    <!-- COMPLETIONS -->
+
+    <div class="sq-my-completions-list">
+
+        @foreach (var item in completions)
+        {
+            var statusClass = item.Status switch
+            {
+                "Approved" => "sq-status-approved",
+                "Rejected" => "sq-status-rejected",
+                _ => "sq-status-pending"
+            };
+
+            var statusLabel = item.Status switch
+            {
+                "Approved" => "APPROVED",
+                "Rejected" => "REJECTED",
+                _ => "PENDING"
+            };
+
+
+            <article class="sq-completion-card">
+
+                <!-- PHOTO -->
+
+                <div class="sq-completion-photo-wrap">
+
+                    @if (!string.IsNullOrWhiteSpace(item.PhotoUrl))
+                    {
+                        <img src="@item.PhotoUrl"
+                             alt="Proof for @item.Quest?.Title"
+                             class="sq-completion-photo" />
+                    }
+                    else
+                    {
+                        <div class="sq-completion-no-photo">
+                            No photo
+                        </div>
+                    }
+
+                </div>
+
+
+                <!-- CONTENT -->
+
+                <div class="sq-completion-content">
+
+                    <div class="sq-completion-top">
+
+                        <span class="sq-completion-status @statusClass">
+                            @statusLabel
+                        </span>
+
+                        <span class="sq-completion-date">
+                            @item.SubmittedAt.ToString("g")
+                        </span>
+
+                    </div>
+
+
+                    <!-- QUEST -->
+
+                    <div class="sq-completion-quest">
+
+                        <div class="sq-section-eyebrow">
+                            QUEST
+                        </div>
+
+                        <h2>
+                            @item.Quest?.Title
+                        </h2>
+
+
+                        @if (!string.IsNullOrWhiteSpace(item.Caption))
+                        {
+                            <p class="sq-completion-caption">
+                                @item.Caption
+                            </p>
+                        }
+
+
+                        @if (item.Quest != null)
+                        {
+                            <span class="sq-completion-xp">
+                                +@item.Quest.PointsReward points
+                            </span>
+                        }
+
+                    </div>
+
+
+                    <!-- STATUS MESSAGE -->
+
+                    <div class="sq-completion-footer">
+
+                        @if (item.Status == "Approved")
+                        {
+                            <span>
+                                Quest approved and points awarded.
+                            </span>
+                        }
+                        else if (item.Status == "Rejected")
+                        {
+                            <span>
+                                This submission was not approved.
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                Your submission is waiting for review.
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </article>
+        }
+
+    </div>
+}
+
+
+</div>

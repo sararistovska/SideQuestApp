@@ -1,0 +1,225 @@
+
+@using SideQuestApp.Models
+@model Quest
+
+@{
+    ViewData["Title"] = "Create Quest";
+}
+
+<div class="sq-create-quest-page">
+
+    <a asp-controller="Quest"
+       asp-action="Index"
+       class="sq-back-link">
+        Back to quests
+    </a>
+
+    <div class="sq-create-quest-header">
+
+        <span class="sq-section-label">
+            ADMIN / QUESTS
+        </span>
+
+        <h1>
+            Create a new quest.
+        </h1>
+
+        <p>
+            Add a new challenge to the SideQuest board and define
+            its category, difficulty and reward.
+        </p>
+
+    </div>
+
+
+    <form asp-action="Create"
+          method="post"
+          class="sq-create-quest-form">
+
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly"
+             class="sq-validation">
+        </div>
+
+
+        <!-- 01 — QUEST DETAILS -->
+
+        <div class="sq-form-section">
+
+            <div class="sq-form-section-heading">
+
+                <span>01</span>
+
+                <div>
+                    <h2>Quest details</h2>
+                    <p>Give the quest its identity.</p>
+                </div>
+
+            </div>
+
+
+            <div class="sq-form-field">
+
+                <label asp-for="Title">
+                    Quest title
+                </label>
+
+                <input asp-for="Title"
+                       placeholder="e.g. Watch the sunrise"
+                       autocomplete="off" />
+
+                <span asp-validation-for="Title"
+                      class="sq-validation">
+                </span>
+
+            </div>
+
+
+            <div class="sq-form-field">
+
+                <label asp-for="Description">
+                    Description
+                </label>
+
+                <textarea asp-for="Description"
+                          rows="5"
+                          placeholder="Describe what the user needs to do...">
+                </textarea>
+
+                <span asp-validation-for="Description"
+                      class="sq-validation">
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- 02 — QUEST SETTINGS -->
+
+        <div class="sq-form-section">
+
+            <div class="sq-form-section-heading">
+
+                <span>02</span>
+
+                <div>
+                    <h2>Quest settings</h2>
+                    <p>Define the category, difficulty and reward.</p>
+                </div>
+
+            </div>
+
+
+            <div class="sq-form-field">
+
+                <label asp-for="CategoryId">
+                    Category
+                </label>
+
+                <select asp-for="CategoryId"
+                        asp-items="ViewBag.CategoryId">
+
+                    <option value="">
+                        Select category
+                    </option>
+
+                </select>
+
+                <span asp-validation-for="CategoryId"
+                      class="sq-validation">
+                </span>
+
+            </div>
+
+
+            <div class="sq-form-field">
+
+                <label asp-for="Difficulty">
+                    Difficulty
+                </label>
+
+                <select asp-for="Difficulty"
+                        asp-items="Html.GetEnumSelectList<DifficultyLevel>()">
+
+                    <option value="">
+                        Select difficulty
+                    </option>
+
+                </select>
+
+                <span asp-validation-for="Difficulty"
+                      class="sq-validation">
+                </span>
+
+                <small>
+                    Choose how challenging the quest is.
+                </small>
+
+            </div>
+
+
+            <div class="sq-form-grid">
+
+                <div class="sq-form-field">
+
+                    <label asp-for="PointsReward">
+                        Points reward
+                    </label>
+
+                    <div class="sq-number-wrapper">
+
+                        <input asp-for="PointsReward"
+                               type="number"
+                               min="1"
+                               placeholder="50" />
+
+                        <span>
+                            points
+                        </span>
+
+                    </div>
+
+                    <small>
+                        Points awarded to each user whose submission is approved.
+                    </small>
+
+                    <span asp-validation-for="PointsReward"
+                          class="sq-validation">
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="sq-form-actions">
+
+            <a asp-action="Index"
+               class="sq-form-cancel">
+                Cancel
+            </a>
+
+            <button type="submit"
+                    class="sq-form-submit">
+                Create quest
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}
+

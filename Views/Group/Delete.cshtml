@@ -1,0 +1,115 @@
+﻿@model SideQuestApp.Models.Group
+
+@{
+    ViewData["Title"] = "Delete Group";
+}
+
+<div class="sq-group-form-page sq-delete-page">
+
+    <a asp-action="Details"
+       asp-route-id="@Model.Id"
+       class="sq-back-link">
+        Back to group
+    </a>
+
+
+    <div class="sq-group-form-header">
+
+        <span class="sq-section-eyebrow">
+            GROUP SETTINGS
+        </span>
+
+        <h1>
+            Delete group
+        </h1>
+
+        <p>
+            This action cannot be undone.
+        </p>
+
+    </div>
+
+
+    <div class="sq-delete-card">
+
+        <div class="sq-delete-warning">
+
+            <span class="sq-section-eyebrow">
+                ARE YOU SURE?
+            </span>
+
+            <h2>
+                Delete @Model.Name?
+            </h2>
+
+            <p>
+                Deleting this group will remove the group and its
+                group quests. Make sure you really want to remove it
+                before continuing.
+            </p>
+
+        </div>
+
+
+        <div class="sq-delete-stats">
+
+            <div>
+                <strong>
+                    @Model.Memberships.Count
+                </strong>
+
+                <span>
+                    Members
+                </span>
+            </div>
+
+
+            <div>
+                <strong>
+                    @Model.Quests.Count
+                </strong>
+
+                <span>
+                    Quests
+                </span>
+            </div>
+
+        </div>
+
+
+        <p class="sq-delete-description">
+
+            Group quests that already have completions cannot be
+            deleted. If this group contains completed submissions,
+            the deletion will be blocked.
+
+        </p>
+
+
+        <form asp-action="Delete"
+              method="post">
+
+            <input type="hidden"
+                   asp-for="Id" />
+
+
+            <div class="sq-form-actions">
+
+                <a asp-action="Details"
+                   asp-route-id="@Model.Id"
+                   class="sq-button sq-button-secondary">
+                    Keep group
+                </a>
+
+                <button type="submit"
+                        class="sq-button sq-button-danger">
+                    Delete group
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

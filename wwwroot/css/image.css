@@ -1,0 +1,443 @@
+﻿
+.sq-lo-intro {
+    position: relative;
+}
+
+.sq-lo-intro-label {
+    position: relative;
+}
+
+.sq-lo-intro-image {
+    position: relative;
+    width: min(260px, 100%);
+    height: 350px;
+    margin: 42px 0 0 24px;
+    overflow: hidden;
+    border-radius: 8px 70px 8px 8px;
+    transform: rotate(-2deg);
+    box-shadow: 18px 22px 0 var(--color-border);
+}
+
+.sq-lo-intro-image::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    z-index: 2;
+    border: 1px solid var(--color-surface);
+    border-radius: 5px 60px 5px 5px;
+    opacity: .55;
+    pointer-events: none;
+}
+
+.sq-lo-intro-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            180deg,
+            transparent 50%,
+            color-mix(in srgb, var(--color-text) 22%, transparent) 100%
+    );
+    pointer-events: none;
+}
+
+.sq-lo-intro-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform .7s ease;
+}
+
+.sq-lo-intro-image:hover img {
+    transform: scale(1.07);
+}
+
+
+.sq-lo-how-grid {
+    align-items: start;
+}
+
+.sq-lo-how-card {
+    position: relative;
+}
+
+.sq-lo-how-image {
+    position: relative;
+    width: 100%;
+    height: 210px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    border-radius: 22px 22px 70px 22px;
+}
+
+.sq-lo-how-card:nth-child(2) .sq-lo-how-image {
+    border-radius: 70px 22px 22px 22px;
+}
+
+.sq-lo-how-card:nth-child(3) .sq-lo-how-image {
+    border-radius: 22px 70px 22px 22px;
+}
+
+.sq-lo-how-card:nth-child(4) .sq-lo-how-image {
+    border-radius: 22px 22px 22px 70px;
+}
+
+.sq-lo-how-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            180deg,
+            transparent 48%,
+            color-mix(in srgb, var(--color-text) 24%, transparent) 100%
+    );
+    pointer-events: none;
+}
+
+.sq-lo-how-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .7s ease, filter .7s ease;
+}
+
+.sq-lo-how-card:hover .sq-lo-how-image img {
+    transform: scale(1.06);
+    filter: saturate(1.06);
+}
+
+.sq-lo-how-card > span {
+    position: relative;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    margin: -44px 0 18px 18px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-surface);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    box-shadow:
+            0 8px 20px color-mix(in srgb, var(--color-text) 14%, transparent);
+}
+
+
+
+.sq-lo-quest-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.sq-lo-quest-card-image {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 24px 24px 8px 8px;
+}
+
+.sq-lo-quest-card-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            180deg,
+            transparent 45%,
+            color-mix(in srgb, var(--color-text) 24%, transparent) 100%
+    );
+    pointer-events: none;
+}
+
+.sq-lo-quest-card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .7s ease;
+}
+
+.sq-lo-quest-card:hover .sq-lo-quest-card-image img {
+    transform: scale(1.06);
+}
+
+
+
+.sq-lo-progression {
+    position: relative;
+}
+
+.sq-lo-progression-image {
+    position: relative;
+    width: min(480px, 100%);
+    height: 430px;
+    overflow: hidden;
+    border-radius: 100px 20px 20px 20px;
+    transform: rotate(1.5deg);
+    box-shadow: -18px 22px 0 var(--color-border);
+}
+
+.sq-lo-progression-image::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    z-index: 2;
+    border: 1px solid var(--color-surface);
+    border-radius: 88px 12px 12px 12px;
+    opacity: .5;
+    pointer-events: none;
+}
+
+.sq-lo-progression-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-accent) 5%, transparent),
+            color-mix(in srgb, var(--color-text) 25%, transparent)
+    );
+    pointer-events: none;
+}
+
+.sq-lo-progression-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .8s ease;
+}
+
+.sq-lo-progression-image:hover img {
+    transform: scale(1.055);
+}
+
+
+
+.sq-lo-groups {
+    position: relative;
+}
+
+.sq-lo-groups-visual {
+    position: relative;
+    min-height: 520px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 30px;
+}
+
+.sq-lo-groups-visual > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 520px;
+    object-fit: cover;
+    object-position: center;
+    transition: transform .9s ease;
+}
+
+.sq-lo-groups-visual::before {
+    content: "";
+    position: absolute;
+    top: -65px;
+    right: -65px;
+    z-index: 2;
+    width: 170px;
+    height: 170px;
+    border: 1px solid var(--color-surface);
+    border-radius: 50%;
+    opacity: .35;
+    pointer-events: none;
+}
+
+.sq-lo-groups-visual::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            180deg,
+            transparent 20%,
+            color-mix(in srgb, var(--color-text) 70%, transparent) 100%
+    );
+    pointer-events: none;
+}
+
+.sq-lo-groups-visual:hover > img {
+    transform: scale(1.045);
+}
+
+.sq-lo-group-overlay {
+    position: absolute;
+    z-index: 3;
+    right: 34px;
+    bottom: 34px;
+    left: 34px;
+    color: var(--color-surface);
+}
+
+.sq-lo-group-overlay p {
+    margin: 0 0 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+}
+
+.sq-lo-group-overlay h3 {
+    max-width: 600px;
+    margin: 0 0 14px;
+    font-size: clamp(30px, 4vw, 58px);
+    line-height: .95;
+    letter-spacing: -.045em;
+}
+
+.sq-lo-group-overlay span {
+    display: block;
+    max-width: 400px;
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: .92;
+}
+
+
+
+.sq-lo-badge-card {
+    position: relative;
+}
+
+.sq-lo-badge-visual {
+    position: relative;
+}
+
+.sq-lo-badge-card:nth-child(2) {
+    transform: translateY(24px);
+}
+
+.sq-lo-badge-card:nth-child(3) {
+    transform: translateY(-8px);
+}
+
+.sq-lo-badge-card:nth-child(4) {
+    transform: translateY(18px);
+}
+
+
+
+.sq-lo-manifesto {
+    position: relative;
+    overflow: hidden;
+}
+
+.sq-lo-manifesto::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -120px;
+    width: 280px;
+    height: 280px;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    opacity: .7;
+    transform: translateY(-50%);
+}
+
+.sq-lo-manifesto::after {
+    content: "";
+    position: absolute;
+    top: 20%;
+    right: 70px;
+    width: 120px;
+    height: 120px;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    opacity: .5;
+}
+
+.sq-lo-manifesto-content {
+    position: relative;
+    z-index: 2;
+}
+
+
+
+@media (max-width: 900px) {
+    .sq-lo-intro-image {
+        width: 220px;
+        height: 300px;
+        margin-left: 0;
+    }
+
+    .sq-lo-how-image {
+        height: 190px;
+    }
+
+    .sq-lo-progression-image {
+        width: 100%;
+        height: 360px;
+    }
+
+    .sq-lo-groups-visual,
+    .sq-lo-groups-visual > img {
+        min-height: 430px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sq-lo-intro-image {
+        width: 190px;
+        height: 260px;
+        margin-top: 28px;
+    }
+
+    .sq-lo-how-image {
+        height: 180px;
+        border-radius: 18px;
+    }
+
+    .sq-lo-how-card:nth-child(2) .sq-lo-how-image,
+    .sq-lo-how-card:nth-child(3) .sq-lo-how-image,
+    .sq-lo-how-card:nth-child(4) .sq-lo-how-image {
+        border-radius: 18px;
+    }
+
+    .sq-lo-how-card > span {
+        width: 38px;
+        height: 38px;
+        margin: -38px 0 18px 14px;
+    }
+
+    .sq-lo-progression-image {
+        height: 300px;
+        border-radius: 60px 16px 16px 16px;
+    }
+
+    .sq-lo-groups-visual,
+    .sq-lo-groups-visual > img {
+        min-height: 360px;
+    }
+
+    .sq-lo-group-overlay {
+        right: 22px;
+        bottom: 22px;
+        left: 22px;
+    }
+
+    .sq-lo-group-overlay h3 {
+        font-size: 34px;
+    }
+
+    .sq-lo-badge-card:nth-child(2),
+    .sq-lo-badge-card:nth-child(3),
+    .sq-lo-badge-card:nth-child(4) {
+        transform: none;
+    }
+}
+

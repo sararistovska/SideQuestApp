@@ -1,0 +1,590 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - SideQuest</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/feed.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/leaderboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/groups.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/quests.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/badges.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/category.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/friends.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/modals.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/notificationPage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/cookies.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/image.css" asp-append-version="true" />
+</head>
+
+<body>
+
+@{
+    var isLoggedIn = User.Identity?.IsAuthenticated == true;
+}
+
+<nav class="sq-navbar">
+
+    <div class="sq-navbar-inner">
+
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="sq-logo">
+            sidequest<span>.</span>
+        </a>
+
+        <div class="sq-main-nav">
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="sq-nav-item">
+                Home
+            </a>
+
+            <a asp-controller="Quest"
+               asp-action="Index"
+               class="sq-nav-item">
+                Quests
+            </a>
+
+            <a asp-controller="Leaderboard"
+               asp-action="Index"
+               class="sq-nav-item">
+                Leaderboard
+            </a>
+
+            <a asp-controller="Group"
+               asp-action="Index"
+               class="sq-nav-item">
+                Groups
+            </a>
+
+            <a asp-controller="Feed"
+               asp-action="Index"
+               class="sq-nav-item">
+                Feed
+            </a>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Badge"
+                   asp-action="Index"
+                   class="sq-nav-item">
+                    Badges
+                </a>
+
+                <a asp-controller="Category"
+                   asp-action="Index"
+                   class="sq-nav-item">
+                    Categories
+                </a>
+
+                <a asp-controller="QuestCompletion"
+                   asp-action="Pending"
+                   class="sq-nav-item">
+                    Review
+                </a>
+            }
+
+        </div>
+
+        <div class="sq-navbar-account">
+
+            @if (isLoggedIn)
+            {
+                @await Component.InvokeAsync("Notification")
+            }
+
+            <button type="button"
+                    class="sq-theme-toggle"
+                    id="themeToggle"
+                    aria-label="Toggle dark mode"
+                    title="Toggle dark mode">
+
+                <span class="sq-theme-icon sq-theme-sun">☼</span>
+                <span class="sq-theme-icon sq-theme-moon">☾</span>
+
+            </button>
+
+            @if (isLoggedIn)
+            {
+                <a asp-controller="Home"
+                   asp-action="Profile"
+                   asp-route-username="@User.Identity?.Name"
+                   class="sq-user-nav">
+
+                    <span class="sq-mini-avatar">
+                        @(User.Identity?.Name?.Substring(0, 1).ToUpper() ?? "U")
+                    </span>
+
+                    <span class="sq-user-nav-name">
+                        @(User.Identity?.Name ?? "Profile")
+                    </span>
+
+                </a>
+
+                <form asp-area="Identity"
+                      asp-page="/Account/Logout"
+                      asp-route-returnUrl="@Url.Action("Index", "Home")"
+                      class="sq-logout-form">
+
+                    <button type="submit">
+                        Log out
+                    </button>
+
+                </form>
+            }
+            else
+            {
+                <a asp-area="Identity"
+                   asp-page="/Account/Login"
+                   class="sq-login">
+                    Log in
+                </a>
+
+                <a asp-area="Identity"
+                   asp-page="/Account/Register"
+                   class="sq-register">
+                    Join SideQuest
+                </a>
+            }
+
+        </div>
+
+        <button type="button"
+                class="sq-mobile-menu-button"
+                aria-label="Open menu"
+                aria-expanded="false">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </button>
+
+    </div>
+
+</nav>
+
+<div class="sq-mobile-nav-overlay"></div>
+
+<aside class="sq-mobile-nav">
+
+    <div class="sq-mobile-nav-links">
+
+        <a asp-controller="Home"
+           asp-action="Index">
+            Home
+        </a>
+
+        <a asp-controller="Quest"
+           asp-action="Index">
+            Quests
+        </a>
+
+        <a asp-controller="Leaderboard"
+           asp-action="Index">
+            Leaderboard
+        </a>
+
+        <a asp-controller="Group"
+           asp-action="Index">
+            Groups
+        </a>
+        
+
+        <a asp-controller="Feed"
+           asp-action="Index">
+            Feed
+        </a>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Badge"
+               asp-action="Index">
+                Badges
+            </a>
+
+            <a asp-controller="Category"
+               asp-action="Index">
+                Categories
+            </a>
+
+            <a asp-controller="QuestCompletion"
+               asp-action="Pending">
+                Review
+            </a>
+        }
+
+    </div>
+
+    <div class="sq-mobile-nav-footer">
+
+        @if (isLoggedIn)
+        {
+            <a asp-controller="Home"
+               asp-action="Profile"
+               asp-route-username="@User.Identity?.Name">
+                Profile
+            </a>
+
+            <form asp-area="Identity"
+                  asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Action("Index", "Home")">
+
+                <button type="submit">
+                    Log out
+                </button>
+
+            </form>
+        }
+        else
+        {
+            <a asp-area="Identity"
+               asp-page="/Account/Login">
+                Log in
+            </a>
+
+            <a asp-area="Identity"
+               asp-page="/Account/Register">
+                Join SideQuest
+            </a>
+        }
+
+    </div>
+
+</aside>
+
+@if (TempData["Error"] != null)
+{
+    <div class="sq-temp-message sq-temp-error">
+        @TempData["Error"]
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="sq-temp-message sq-temp-success">
+        @TempData["Success"]
+    </div>
+}
+
+<div class="sq-cookie-banner" id="cookieBanner" hidden>
+
+    <div class="sq-cookie-content">
+
+        <div class="sq-cookie-text">
+
+            <span class="sq-cookie-label">
+                YOUR PRIVACY
+            </span>
+
+            <h3>
+                Your privacy matters.
+            </h3>
+
+            <p>
+                SideQuest uses essential cookies to keep the website secure
+                and remember your session. Optional cookies help us understand
+                how the website is used. You can choose which cookies you allow.
+            </p>
+
+        </div>
+
+        <div class="sq-cookie-actions">
+
+            <button type="button"
+                    class="sq-cookie-button sq-cookie-secondary"
+                    id="cookieNecessary">
+                Necessary only
+            </button>
+
+            <button type="button"
+                    class="sq-cookie-button sq-cookie-primary"
+                    id="cookieAccept">
+                Accept all
+            </button>
+
+            <button type="button"
+                    class="sq-cookie-manage"
+                    id="cookieManage">
+                Manage preferences
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="sq-cookie-modal" id="cookieModal" hidden>
+
+    <div class="sq-cookie-modal-backdrop"
+         id="cookieModalBackdrop">
+    </div>
+
+    <div class="sq-cookie-modal-card">
+
+        <button type="button"
+                class="sq-cookie-modal-close"
+                id="cookieModalClose"
+                aria-label="Close">
+            ×
+        </button>
+
+        <span class="sq-cookie-label">
+            COOKIE SETTINGS
+        </span>
+
+        <h2>
+            Privacy preferences
+        </h2>
+
+        <p class="sq-cookie-modal-intro">
+            Choose which types of cookies you want SideQuest to use.
+            Essential cookies are always active because they are necessary
+            for the website to function.
+        </p>
+
+        <div class="sq-cookie-option">
+
+            <div class="sq-cookie-option-text">
+
+                <h3>
+                    Essential cookies
+                </h3>
+
+                <p>
+                    These cookies are required for login, authentication,
+                    security and basic website functionality.
+                </p>
+
+            </div>
+
+            <span class="sq-cookie-always">
+                Always active
+            </span>
+
+        </div>
+
+        <div class="sq-cookie-option">
+
+            <div class="sq-cookie-option-text">
+
+                <h3>
+                    Analytics cookies
+                </h3>
+
+                <p>
+                    These cookies help us understand how visitors use
+                    SideQuest so we can improve the experience.
+                </p>
+
+            </div>
+
+            <label class="sq-cookie-switch">
+
+                <input type="checkbox"
+                       id="analyticsCookies">
+
+                <span class="sq-cookie-slider"></span>
+
+            </label>
+
+        </div>
+
+        <div class="sq-cookie-modal-actions">
+
+            <button type="button"
+                    class="sq-cookie-button sq-cookie-secondary"
+                    id="cookieSave">
+                Save preferences
+            </button>
+
+            <button type="button"
+                    class="sq-cookie-button sq-cookie-primary"
+                    id="cookieAcceptModal">
+                Accept all
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+@RenderBody()
+
+<footer class="sq-footer">
+
+    <div class="sq-footer-inner">
+
+        <div class="sq-footer-main">
+
+            <div class="sq-footer-brand">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="sq-footer-logo">
+                    sidequest<span>.</span>
+                </a>
+
+                <p>
+                    Make ordinary days<br />
+                    a little less ordinary.
+                </p>
+
+            </div>
+
+            <div class="sq-footer-links">
+
+                <div class="sq-footer-column">
+
+                    <span>
+                        DISCOVER
+                    </span>
+
+                    <a asp-controller="Quest"
+                       asp-action="Index">
+                        Quests
+                    </a>
+
+                    <a asp-controller="Badge"
+                       asp-action="Index">
+                        Badges
+                    </a>
+
+                    <a asp-controller="Leaderboard"
+                       asp-action="Index">
+                        Leaderboard
+                    </a>
+                    
+
+                </div>
+
+                <div class="sq-footer-column">
+
+                    @if (isLoggedIn)
+                    {
+                        <span>
+                            COMMUNITY
+                        </span>
+
+                        <a asp-controller="Feed"
+                           asp-action="Index">
+                            Feed
+                        </a>
+
+                        <a asp-controller="Home"
+                           asp-action="Profile"
+                           asp-route-username="@User.Identity?.Name">
+                            Profile
+                        </a>
+
+                        <a asp-controller="Friends"
+                           asp-action="Index">
+                            Friends
+                        </a>
+
+                        <a asp-controller="Group"
+                           asp-action="Index">
+                            Groups
+                        </a>
+                    }
+                    else
+                    {
+                        <span>
+                            ACCOUNT
+                        </span>
+
+                        <a asp-area="Identity"
+                           asp-page="/Account/Login">
+                            Log in
+                        </a>
+
+                        <a asp-area="Identity"
+                           asp-page="/Account/Register">
+                            Create account
+                        </a>
+                    }
+
+                </div>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="sq-footer-column">
+
+                        <span>
+                            ADMIN
+                        </span>
+
+                        <a asp-controller="Quest"
+                           asp-action="PendingSubmissions">
+                            Review submissions
+                        </a>
+
+                        <a asp-controller="Quest"
+                           asp-action="Create">
+                            Create quest
+                        </a>
+
+                        <a asp-controller="Category"
+                           asp-action="Index">
+                            Manage categories
+                        </a>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+        <div class="sq-footer-bottom">
+
+            <span>
+                © @DateTime.Now.Year SideQuest
+            </span>
+
+            <div class="sq-footer-bottom-right">
+
+                <button type="button"
+                        class="sq-cookie-settings-link"
+                        id="cookieSettings">
+                    Cookie settings
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="~/js/site.js"
+        asp-append-version="true">
+</script>
+
+@await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

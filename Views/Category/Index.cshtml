@@ -1,0 +1,90 @@
+@model IEnumerable<SideQuestApp.Models.Category>
+
+@{
+    ViewData["Title"] = "Categories";
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<div class="sq-category-page">
+
+    <div class="sq-category-header">
+        <div>
+            <span class="sq-label">EXPLORE</span>
+            <h1>Quest Categories</h1>
+            <p>
+                Find your next challenge by choosing what kind of adventure
+                you want to take on.
+            </p>
+        </div>
+
+        @if (isAdmin)
+        {
+            <a asp-action="Create" class="sq-button sq-button-primary">
+                Create category
+            </a>
+        }
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="sq-category-grid">
+
+            @foreach (var category in Model)
+            {
+                <a asp-action="Details"
+                   asp-route-id="@category.Id"
+                   class="sq-category-card">
+
+                    <div class="sq-category-number">
+                        @category.Id.ToString("00")
+                    </div>
+
+                    <div class="sq-category-card-content">
+                        <h2>@category.Name</h2>
+
+                        @if (!string.IsNullOrWhiteSpace(category.Description))
+                        {
+                            <p>@category.Description</p>
+                        }
+                        else
+                        {
+                            <p>Explore quests in this category.</p>
+                        }
+                    </div>
+
+                    <div class="sq-category-card-bottom">
+                        <span>
+                            @category.Quests.Count
+                            @(category.Quests.Count == 1 ? "quest" : "quests")
+                        </span>
+
+                        <span class="sq-category-view">
+                            View category
+                        </span>
+                    </div>
+
+                </a>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="sq-category-empty">
+            <span class="sq-label">NOTHING HERE YET</span>
+            <h2>No categories yet.</h2>
+            <p>
+                Categories will appear here once they are created.
+            </p>
+
+            @if (isAdmin)
+            {
+                <a asp-action="Create"
+                   class="sq-button sq-button-primary">
+                    Create first category
+                </a>
+            }
+        </div>
+    }
+
+</div>

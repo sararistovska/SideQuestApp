@@ -1,0 +1,379 @@
+﻿@using SideQuestApp.Models
+
+@{
+    var user = ViewBag.CurrentUser as ApplicationUser;
+
+    var newQuests =
+        ViewBag.NewQuests as List<Quest>
+        ?? new List<Quest>();
+
+    var friendPosts =
+        ViewBag.FriendPosts as List<QuestCompletion>
+        ?? new List<QuestCompletion>();
+
+    var recentPosts =
+        ViewBag.RecentCommunityPosts as List<QuestCompletion>
+        ?? new List<QuestCompletion>();
+
+    var recentCompletions =
+        ViewBag.RecentCompletions as List<QuestCompletion>
+        ?? new List<QuestCompletion>();
+
+    var pendingCompletions =
+        ViewBag.PendingCompletions as List<QuestCompletion>
+        ?? new List<QuestCompletion>();
+
+    var approvedCompletions =
+        ViewBag.ApprovedCompletions as List<QuestCompletion>
+        ?? new List<QuestCompletion>();
+
+    var pendingFriendRequests =
+        ViewBag.PendingFriendRequests as List<Friendship>
+        ?? new List<Friendship>();
+
+    var firstLetter =
+        !string.IsNullOrWhiteSpace(user?.UserName)
+            ? user.UserName.Substring(0, 1).ToUpper()
+            : "U";
+}
+
+@if (user == null)
+{
+    <section class="sq-dashboard">
+        <div class="sq-dashboard-card">
+            <h2>Unable to load your dashboard.</h2>
+        </div>
+    </section>
+}
+else
+{
+    <section class="sq-dashboard">
+
+        
+        <!-- HEADER -->
+
+        <div class="sq-dashboard-header">
+
+            <div>
+                <p class="sq-label">WELCOME BACK</p>
+
+                <h1>
+                    What’s next, <span style="color: var(--color-accent);">@user.UserName</span>?
+                </h1>
+
+                <p>
+                    Keep exploring, completing quests and building
+                    your SideQuest story.
+                </p>
+            </div>
+
+            <a asp-controller="Home"
+               asp-action="Profile"
+               class="sq-dashboard-profile">
+
+                <div class="sq-dashboard-profile-avatar">
+
+                    @if (!string.IsNullOrWhiteSpace(user.ProfileImageUrl))
+                    {
+                        <img src="@user.ProfileImageUrl"
+                             alt="@user.UserName profile picture"/>
+                    }
+                    else
+                    {
+                        <span>@firstLetter</span>
+                    }
+
+                </div>
+
+                <div>
+                    <strong>@user.UserName</strong>
+                    <span>Level @user.Level</span>
+                </div>
+
+            </a>
+
+        </div>
+
+
+
+        
+        <!-- MAIN STATS -->
+
+        <div class="sq-dashboard-stats">
+
+            <div class="sq-dashboard-stat-card">
+
+                <span>Level</span>
+
+                <strong>
+                    @user.Level
+                </strong>
+
+                <small>
+                    Current level
+                </small>
+
+            </div>
+
+
+            <div class="sq-dashboard-stat-card">
+
+                <span>Points</span>
+
+                <strong>
+                    @user.Points
+                </strong>
+
+                <small>
+                    Total earned
+                </small>
+
+            </div>
+
+
+            <div class="sq-dashboard-stat-card">
+
+                <span>Quests completed</span>
+
+                <strong>
+                    @(ViewBag.PostCount ?? approvedCompletions.Count)
+                </strong>
+
+                <small>
+                    Approved quests
+                </small>
+
+            </div>
+
+
+            <div class="sq-dashboard-stat-card">
+
+                <span>Friends</span>
+
+                <strong>
+                    @(ViewBag.FriendCount ?? 0)
+                </strong>
+
+                <small>
+                    Your SideQuest circle
+                </small>
+
+            </div>
+
+        </div>
+
+
+        
+        <!-- QUESTS + LEVEL -->
+
+        <div class="sq-dashboard-columns">
+
+            <!-- AVAILABLE QUESTS -->
+
+            <section class="sq-dashboard-card">
+
+                <div class="sq-card-header">
+
+                    <div>
+                        <p class="sq-label">EXPLORE</p>
+                        <h2>Available quests</h2>
+                    </div>
+
+                    <a asp-controller="Quest"
+                       asp-action="Index">
+                        View all
+                    </a>
+
+                </div>
+
+
+                @if (!newQuests.Any())
+                {
+                    <div class="sq-dashboard-empty">
+
+                        <h3>No new quests right now.</h3>
+
+                        <p>
+                            Check back soon for new adventures.
+                        </p>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="sq-dashboard-quest-list">
+
+                        @foreach (var quest in newQuests)
+                        {
+                            <a asp-controller="Quest"
+                               asp-action="Details"
+                               asp-route-id="@quest.Id"
+                               class="sq-dashboard-quest">
+
+                                <div>
+
+                                    <span class="sq-dashboard-quest-category">
+                                        @quest.Category?.Name
+                                    </span>
+
+                                    <strong>
+                                        @quest.Title
+                                    </strong>
+
+                                    @if (!string.IsNullOrWhiteSpace(quest.Description))
+                                    {
+                                        <p>
+                                            @quest.Description
+                                        </p>
+                                    }
+
+                                </div>
+
+                                <div class="sq-dashboard-quest-reward">
+
+                                    <strong>
+                                        +@quest.PointsReward
+                                    </strong>
+
+                                    <span>
+                                        @quest.Difficulty
+                                    </span>
+
+                                </div>
+
+                            </a>
+                        }
+
+                    </div>
+                }
+
+            </section>
+
+
+            <!-- LEVEL -->
+
+            <section class="sq-dashboard-card">
+
+                <div class="sq-card-header">
+
+                    <div>
+                        <p class="sq-label">PROGRESSION</p>
+                        <h2>Your level</h2>
+                    </div>
+
+                    <a asp-controller="Home"
+                       asp-action="Profile">
+                        View profile
+                    </a>
+
+                </div>
+
+
+                <div class="sq-dashboard-level">
+
+                    <div class="sq-dashboard-level-number">
+                        @user.Level
+                    </div>
+
+                    <div class="sq-dashboard-level-content">
+
+                        <div class="sq-dashboard-level-top">
+                            <strong>
+                                Level @user.Level
+                            </strong>
+
+                            <span>
+                                @user.Points Points
+                            </span>
+                        </div>
+
+                        @{
+                            var pointsIntoLevel = user.Points % 100;
+                        }
+
+                        <div class="sq-profile-progress">
+
+                            <div class="sq-profile-progress-fill"
+                                 style="width: @(pointsIntoLevel)%;"></div>
+
+                        </div>
+
+                        <span class="sq-profile-progress-text">
+                            @pointsIntoLevel / 100 toward next level
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </section>
+
+        </div>
+
+
+        
+        <!-- PENDING QUEST SUBMISSIONS -->
+
+        @if (pendingCompletions.Any())
+        {
+            <section class="sq-dashboard-card">
+
+                <div class="sq-card-header">
+
+                    <div>
+                        <p class="sq-label">WAITING FOR REVIEW</p>
+                        <h2>Pending submissions</h2>
+                    </div>
+
+                    <span>
+                        @pendingCompletions.Count
+                    </span>
+
+                </div>
+
+
+                <div class="sq-dashboard-completion-list">
+
+                    @foreach (var completion in pendingCompletions)
+                    {
+                        <div class="sq-dashboard-completion">
+
+                            <div class="sq-dashboard-completion-image">
+
+                                @if (!string.IsNullOrWhiteSpace(completion.PhotoUrl))
+                                {
+                                    <img src="@completion.PhotoUrl"
+                                         alt="@completion.Quest?.Title"/>
+                                }
+
+                            </div>
+
+                            <div class="sq-dashboard-completion-info">
+
+                                <strong>
+                                    @completion.Quest?.Title
+                                </strong>
+
+                                <span>
+                                    Submitted
+                                    @completion.SubmittedAt.ToString("MMM d, yyyy")
+                                </span>
+
+                            </div>
+
+                            <span class="sq-status-pending">
+                                Pending
+                            </span>
+
+                        </div>
+                    }
+
+                </div>
+
+            </section>
+        }
+
+
+    </section>
+}

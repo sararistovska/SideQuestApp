@@ -1,0 +1,175 @@
+﻿@using SideQuestApp.Models
+@model ApplicationUser
+
+@{
+    ViewData["Title"] = Model?.UserName + " — Private Profile";
+
+    var user = ViewBag.ProfileUser as ApplicationUser ?? Model;
+
+    var friendshipStatus = ViewBag.FriendshipStatus as string;
+    var friendshipId = ViewBag.FriendshipId;
+
+    var firstLetter =
+        !string.IsNullOrWhiteSpace(user?.UserName)
+            ? user.UserName.Substring(0, 1).ToUpper()
+            : "U";
+}
+
+<div class="sq-private-profile">
+
+    <div class="sq-private-card">
+
+        <div class="sq-private-avatar">
+
+            @if (!string.IsNullOrWhiteSpace(user?.ProfileImageUrl))
+            {
+                <img src="@user.ProfileImageUrl"
+                     alt="@user.UserName" />
+            }
+            else
+            {
+                <span>@firstLetter</span>
+            }
+
+        </div>
+
+        <h1>@user?.UserName</h1>
+
+        <p class="sq-private-description">
+            This profile is private. Become friends with @user?.UserName
+            to see their completed quests, badges, and activity.
+        </p>
+
+        <div class="sq-private-actions">
+
+            @* ALREADY FRIEND *@
+
+            @if (friendshipStatus == "Accepted")
+            {
+                <span class="sq-status-approved">
+                    Friends
+                </span>
+
+                @if (friendshipId != null)
+                {
+                    <form asp-controller="Friends"
+                          asp-action="Remove"
+                          method="post"
+                          style="display:inline;">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@friendshipId" />
+
+                        <button type="submit"
+                                class="sq-button sq-button-secondary">
+                            Remove friend
+                        </button>
+
+                    </form>
+                }
+            }
+
+            @* REQUEST SENT BY CURRENT USER *@
+
+            else if (friendshipStatus == "PendingSent")
+            {
+                <form asp-controller="Friends"
+                      asp-action="CancelRequest"
+                      method="post"
+                      style="display:inline;">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="username"
+                           value="@user?.UserName" />
+
+                    <button type="submit"
+                            class="sq-button sq-button-secondary">
+                        Cancel request
+                    </button>
+
+                </form>
+            }
+
+            @* REQUEST RECEIVED FROM THIS USER *@
+
+            else if (friendshipStatus == "PendingReceived")
+            {
+                @if (friendshipId != null)
+                {
+                    <form asp-controller="Friends"
+                          asp-action="Accept"
+                          method="post"
+                          style="display:inline;">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@friendshipId" />
+
+                        <button type="submit"
+                                class="sq-button sq-button-primary">
+                            Accept request
+                        </button>
+
+                    </form>
+
+                    <form asp-controller="Friends"
+                          asp-action="Reject"
+                          method="post"
+                          style="display:inline;">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@friendshipId" />
+
+                        <button type="submit"
+                                class="sq-button sq-button-secondary">
+                            Decline
+                        </button>
+
+                    </form>
+                }
+            }
+
+            @* NO FRIENDSHIP *@
+
+            else
+            {
+                <form asp-controller="Friends"
+                      asp-action="SendRequest"
+                      method="post"
+                      style="display:inline;">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="username"
+                           value="@user?.UserName" />
+
+                    <button type="submit"
+                            class="sq-button sq-button-primary">
+                        Add friend
+                    </button>
+
+                </form>
+            }
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="sq-button sq-button-secondary">
+                Back home
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

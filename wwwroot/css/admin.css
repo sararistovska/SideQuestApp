@@ -1,0 +1,118 @@
+﻿/* admin dashboard */
+.sq-admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.sq-admin-stat-card {
+    min-height: 180px;
+    padding: 26px;
+    border-radius: 29px;
+    background: var(--color-surface);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 12px 35px color-mix(in srgb, var(--color-text) 4%, transparent);
+}
+
+.sq-admin-stat-card:nth-child(1) {
+    background: color-mix(in srgb, var(--color-accent) 35%, var(--color-bg));
+}
+
+.sq-admin-stat-card:nth-child(2) {
+    background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+}
+
+.sq-admin-stat-card:nth-child(4) {
+    background: color-mix(in srgb, var(--color-text) 7%, var(--color-surface));
+}
+
+.sq-admin-stat-card span {
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.sq-admin-stat-card strong {
+    color: var(--color-text);
+    font-family: "Outfit", sans-serif;
+    font-size: 3.8rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.06em;
+}
+
+
+/* admin columns */
+
+.sq-admin-columns {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 18px;
+}
+
+.sq-admin-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sq-admin-actions a {
+    min-height: 76px;
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--color-bg) 70%, var(--color-surface));
+    transition: all 0.2s ease;
+}
+
+.sq-admin-actions a:hover {
+    background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+    transform: translateX(3px);
+}
+
+.sq-admin-actions strong {
+    display: block;
+    color: var(--color-text);
+    font-family: "Outfit", sans-serif;
+    font-size: 0.92rem;
+}
+
+.sq-admin-actions span {
+    display: block;
+    margin-top: 4px;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    font-size: 0.7rem;
+    line-height: 1.45;
+}
+
+
+/* dark mode */
+
+.sq-dark .sq-admin-stat-card {
+    background: var(--color-surface);
+    box-shadow: 0 12px 35px color-mix(in srgb, var(--color-bg) 25%, transparent);
+}
+
+.sq-dark .sq-admin-stat-card:nth-child(1) {
+    background: color-mix(in srgb, var(--color-accent) 24%, var(--color-surface));
+}
+
+.sq-dark .sq-admin-stat-card:nth-child(2) {
+    background: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));
+}
+
+.sq-dark .sq-admin-stat-card:nth-child(4) {
+    background: color-mix(in srgb, var(--color-text) 5%, var(--color-surface));
+}
+
+.sq-dark .sq-admin-actions a {
+    background: color-mix(in srgb, var(--color-surface) 90%, var(--color-bg));
+}
+
+.sq-dark .sq-admin-actions a:hover {
+    background: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));
+}

@@ -1,0 +1,111 @@
+﻿@model List<SideQuestApp.Models.Notification>
+
+@{
+    var unreadCount = Model.Count(n => !n.IsRead);
+}
+
+<div class="sq-notification-wrapper">
+
+    <button type="button"
+            class="sq-notification-button"
+            id="notificationToggle"
+            aria-label="Notifications"
+            aria-expanded="false">
+
+        <span class="sq-notification-bell"></span>
+
+        @if (unreadCount > 0)
+        {
+            <span class="sq-notification-count">
+                @unreadCount
+            </span>
+        }
+
+    </button>
+
+    <div class="sq-notification-dropdown"
+         id="notificationDropdown">
+
+        <div class="sq-notification-header">
+            <div>
+                <span>NOTIFICATIONS</span>
+                <h3>What's happening</h3>
+            </div>
+
+            @if (unreadCount > 0)
+            {
+                <form asp-controller="Notification"
+                      asp-action="MarkAllAsRead"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit"
+                            class="sq-notification-mark-all">
+                        Mark all read
+                    </button>
+                </form>
+            }
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="sq-notification-list">
+
+                @foreach (var notification in Model)
+                {
+                    <form asp-controller="Notification"
+                          asp-action="MarkAsRead"
+                          asp-route-id="@notification.Id"
+                          method="post"
+                          class="sq-notification-form">
+
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit"
+                                class="sq-notification-item @(notification.IsRead ? "" : "is-unread")">
+
+                            <span class="sq-notification-dot"></span>
+
+                            <span class="sq-notification-item-content">
+
+                                <strong>@notification.Title</strong>
+
+                                @if (!string.IsNullOrWhiteSpace(notification.Message))
+                                {
+                                    <span>@notification.Message</span>
+                                }
+
+                                <small>
+                                    @(notification.CreatedAt.ToLocalTime().ToString("dd MMM, HH:mm"))
+                                </small>
+
+                            </span>
+
+                        </button>
+
+                    </form>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="sq-notification-empty">
+                <span class="sq-notification-empty-icon">—</span>
+
+                <h4>You're all caught up.</h4>
+
+                <p>Nothing new here yet.</p>
+            </div>
+        }
+
+        <a asp-controller="Notification"
+           asp-action="Index"
+           class="sq-notification-view-all">
+            View all notifications
+        </a>
+
+    </div>
+
+</div>

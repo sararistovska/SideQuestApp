@@ -1,0 +1,476 @@
+﻿@model SideQuestApp.ViewModels.FriendsViewModel
+
+@{
+    ViewData["Title"] = "Friends";
+}
+
+<div class="sq-friends-page">
+
+    <!-- HEADER -->
+
+    <section class="sq-friends-header">
+        <div>
+            <span class="sq-section-eyebrow">CONNECTIONS</span>
+
+            <h1>Friends</h1>
+
+            <p>
+                Find people, build your circle and take on SideQuests together.
+            </p>
+        </div>
+
+        <div class="sq-friends-count">
+            <strong>@Model.Friends.Count</strong>
+            <span>friends</span>
+        </div>
+    </section>
+
+
+    <!-- SEARCH -->
+
+    <section class="sq-friends-search">
+
+        <form asp-controller="Friends"
+              asp-action="Index"
+              method="get">
+
+            <div class="sq-search-field">
+                <input type="text"
+                       name="search"
+                       value="@Model.SearchTerm"
+                       placeholder="Search users..."
+                       autocomplete="off" />
+
+                <button type="submit">
+                    Search
+                </button>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+            {
+                <a asp-controller="Friends"
+                   asp-action="Index"
+                   class="sq-search-clear">
+                    Clear
+                </a>
+            }
+
+        </form>
+
+    </section>
+
+
+    <!-- SEARCH RESULTS -->
+
+    @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+    {
+        <section class="sq-friends-section">
+
+            <div class="sq-section-heading">
+                <div>
+                    <span class="sq-section-eyebrow">SEARCH</span>
+                    <h2>Search results</h2>
+                </div>
+
+                <span class="sq-section-count">
+                    @Model.SearchResults.Count
+                </span>
+            </div>
+
+
+            @if (Model.SearchResults.Any())
+            {
+                <div class="sq-people-grid">
+
+                    @foreach (var user in Model.SearchResults)
+                    {
+                        <article class="sq-person-card">
+
+                            <div class="sq-person-info">
+
+                                <a asp-controller="Home"
+                                   asp-action="Profile"
+                                   asp-route-id="@user.UserName"
+                                   class="sq-person-name">
+                                    @user.UserName
+                                </a>
+
+                            </div>
+
+
+                            <div class="sq-person-action">
+
+                                @if (Model.FriendIds.Contains(user.Id))
+                                {
+                                    <span class="sq-person-status">
+                                        Friends
+                                    </span>
+                                }
+                                else if (Model.IncomingUserIds.Contains(user.Id))
+                                {
+                                    <span class="sq-person-status">
+                                        Incoming request
+                                    </span>
+                                }
+                                else if (Model.OutgoingUserIds.Contains(user.Id))
+                                {
+                                    <form asp-controller="Friends"
+                                          asp-action="CancelRequest"
+                                          method="post"
+                                          class="friend-action-form"
+                                          data-action="cancel-request">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="username"
+                                               value="@user.UserName" />
+
+                                        <button type="submit"
+                                                class="sq-btn sq-btn-secondary">
+                                            Cancel request
+                                        </button>
+
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-controller="Friends"
+                                          asp-action="SendRequest"
+                                          method="post"
+                                          class="friend-action-form"
+                                          data-action="send-request">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="username"
+                                               value="@user.UserName" />
+
+                                        <button type="submit"
+                                                class="sq-btn sq-btn-primary">
+                                            Add friend
+                                        </button>
+
+                                    </form>
+                                }
+
+                            </div>
+
+                        </article>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="sq-empty-state">
+                    <h3>No users found</h3>
+                    <p>
+                        Try searching with a different username.
+                    </p>
+                </div>
+            }
+
+        </section>
+    }
+
+
+    <!-- INCOMING REQUESTS -->
+
+    @if (Model.IncomingRequests.Any())
+    {
+        <section class="sq-friends-section">
+
+            <div class="sq-section-heading">
+                <div>
+                    <span class="sq-section-eyebrow">PENDING</span>
+                    <h2>Friend requests</h2>
+                </div>
+
+                <span class="sq-section-count">
+                    @Model.IncomingRequests.Count
+                </span>
+            </div>
+
+
+            <div class="sq-people-grid">
+
+                @foreach (var request in Model.IncomingRequests)
+                {
+                    var requester = request.Requester;
+
+                    if (requester == null)
+                    {
+                        continue;
+                    }
+
+                    <article class="sq-person-card">
+
+                        <div class="sq-person-info">
+
+                            <a asp-controller="Home"
+                               asp-action="Profile"
+                               asp-route-id="@requester.UserName"
+                               class="sq-person-name">
+                                @requester.UserName
+                            </a>
+
+                            <span class="sq-person-meta">
+                                wants to be your friend
+                            </span>
+
+                        </div>
+
+
+                        <div class="sq-person-actions">
+
+                            <form asp-controller="Friends"
+                                  asp-action="Accept"
+                                  method="post"
+                                  class="friend-action-form"
+                                  data-action="accept">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@request.Id" />
+
+                                <button type="submit"
+                                        class="sq-btn sq-btn-primary">
+                                    Accept
+                                </button>
+
+                            </form>
+
+
+                            <form asp-controller="Friends"
+                                  asp-action="Reject"
+                                  method="post"
+                                  class="friend-action-form"
+                                  data-action="reject">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@request.Id" />
+
+                                <button type="submit"
+                                        class="sq-btn sq-btn-secondary">
+                                    Reject
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </article>
+                }
+
+            </div>
+
+        </section>
+    }
+
+
+    <!-- SUGGESTIONS -->
+
+    @if (Model.Suggestions.Any())
+    {
+        <section class="sq-friends-section">
+
+            <div class="sq-section-heading">
+
+                <div>
+                    <span class="sq-section-eyebrow">DISCOVER</span>
+                    <h2>People you may know</h2>
+                </div>
+
+            </div>
+
+
+            <div class="sq-people-grid">
+
+                @foreach (var user in Model.Suggestions)
+                {
+                    <article class="sq-person-card">
+
+                        <div class="sq-person-info">
+
+                            <a asp-controller="Home"
+                               asp-action="Profile"
+                               asp-route-id="@user.UserName"
+                               class="sq-person-name">
+                                @user.UserName
+                            </a>
+
+                        </div>
+
+
+                        <div class="sq-person-action">
+
+                            @if (Model.FriendIds.Contains(user.Id))
+                            {
+                                <span class="sq-person-status">
+                                    Friends
+                                </span>
+                            }
+                            else if (Model.IncomingUserIds.Contains(user.Id))
+                            {
+                                <span class="sq-person-status">
+                                    Incoming request
+                                </span>
+                            }
+                            else if (Model.OutgoingUserIds.Contains(user.Id))
+                            {
+                                <form asp-controller="Friends"
+                                      asp-action="CancelRequest"
+                                      method="post"
+                                      class="friend-action-form"
+                                      data-action="cancel-request">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="username"
+                                           value="@user.UserName" />
+
+                                    <button type="submit"
+                                            class="sq-btn sq-btn-secondary">
+                                        Cancel request
+                                    </button>
+
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-controller="Friends"
+                                      asp-action="SendRequest"
+                                      method="post"
+                                      class="friend-action-form"
+                                      data-action="send-request">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="username"
+                                           value="@user.UserName" />
+
+                                    <button type="submit"
+                                            class="sq-btn sq-btn-primary">
+                                        Add friend
+                                    </button>
+
+                                </form>
+                            }
+
+                        </div>
+
+                    </article>
+                }
+
+            </div>
+
+        </section>
+    }
+
+
+    <!-- MY FRIENDS -->
+
+    <section class="sq-friends-section">
+
+        <div class="sq-section-heading">
+
+            <div>
+                <span class="sq-section-eyebrow">YOUR CIRCLE</span>
+                <h2>My friends</h2>
+            </div>
+
+            <span class="sq-section-count">
+                @Model.Friends.Count
+            </span>
+
+        </div>
+
+
+        @if (Model.Friends.Any())
+        {
+            <div class="sq-people-grid">
+
+                @foreach (var friend in Model.Friends)
+                {
+                    <article class="sq-person-card">
+
+                        <div class="sq-person-info">
+
+                            <a asp-controller="Home"
+                               asp-action="Profile"
+                               asp-route-id="@friend.UserName"
+                               class="sq-person-name">
+                                @friend.UserName
+                            </a>
+
+                            <span class="sq-person-meta">
+                                Friend
+                            </span>
+
+                        </div>
+
+
+                        <div class="sq-person-actions">
+
+                            @{
+                                var friendship = Model.Friendships
+                                    .FirstOrDefault(f =>
+                                        f.RequesterId == friend.Id ||
+                                        f.AddresseeId == friend.Id);
+                            }
+
+                            @if (friendship != null)
+                            {
+                                <form asp-controller="Friends"
+                                      asp-action="Remove"
+                                      method="post"
+                                      class="friend-action-form"
+                                      data-action="remove">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@friendship.Id" />
+
+                                    <button type="submit"
+                                            class="sq-btn sq-btn-secondary">
+                                        Remove
+                                    </button>
+
+                                </form>
+                            }
+
+                        </div>
+
+                    </article>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="sq-empty-state">
+
+                <h3>Your circle is empty</h3>
+
+                <p>
+                    Search for people above and start building your SideQuest circle.
+                </p>
+
+            </div>
+        }
+
+    </section>
+
+</div>
+

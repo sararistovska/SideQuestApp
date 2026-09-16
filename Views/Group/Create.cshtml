@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "Create Group";
+}
+
+<div class="sq-group-form-page">
+
+    <div class="sq-group-form-header">
+        
+        <a asp-controller="Group"
+           asp-action="Index"
+           class="sq-back-link">
+            Back to groups
+        </a>
+
+        <span class="sq-section-eyebrow">
+            NEW GROUP
+        </span>
+
+        <h1>Create a group</h1>
+
+        <p>
+            Create a private space for you and your friends.
+            Once it is created, share the invite code with them.
+        </p>
+
+    </div>
+
+
+    <form asp-action="Create"
+          method="post"
+          class="sq-group-form-card">
+
+        <div asp-validation-summary="ModelOnly"
+             class="sq-validation-summary">
+        </div>
+
+
+        <div class="sq-form-field">
+
+            <label for="name">
+                Group name
+            </label>
+
+            <input type="text"
+                   id="name"
+                   name="name"
+                   maxlength="100"
+                   placeholder="Give your group a name..."
+                   required />
+
+            <span class="sq-form-help">
+                Choose something your group will recognize.
+            </span>
+
+        </div>
+
+
+        <div class="sq-form-field">
+
+            <label for="description">
+                Description
+            </label>
+
+            <textarea id="description"
+                      name="description"
+                      rows="5"
+                      maxlength="500"
+                      placeholder="What is this group about?"></textarea>
+
+            <span class="sq-form-help">
+                Tell your members what this group is for.
+            </span>
+
+        </div>
+
+
+        <div class="sq-form-actions">
+
+            <a asp-action="Index"
+               class="sq-button sq-button-secondary">
+                Cancel
+            </a>
+
+            <button type="submit"
+                    class="sq-button sq-button-primary">
+                Create group
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

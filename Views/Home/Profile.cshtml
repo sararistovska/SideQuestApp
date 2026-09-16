@@ -1,0 +1,884 @@
+﻿
+@using SideQuestApp.Models
+@model ApplicationUser
+
+@{
+    ViewData["Title"] = (Model.UserName ?? "Profile") + " — Profile";
+
+    var isOwnProfile =
+        ViewBag.IsOwnProfile is bool own && own;
+
+    var friendshipStatus =
+        ViewBag.FriendshipStatus as string;
+
+    var friendshipId =
+        ViewBag.FriendshipId;
+
+    var completions =
+        ViewBag.Completions as List<QuestCompletion>
+        ?? new List<QuestCompletion>();
+
+    var friends =
+        ViewBag.Friends as List<ApplicationUser>
+        ?? new List<ApplicationUser>();
+
+    var badges =
+        Model.UserBadges?
+            .Where(x => x.Badge != null)
+            .ToList()
+        ?? new List<UserBadge>();
+
+    var firstLetter =
+        !string.IsNullOrWhiteSpace(Model.UserName)
+            ? Model.UserName.Substring(0, 1).ToUpper()
+            : "U";
+
+    var points = Model.Points;
+
+    var level =
+        Model.Level <= 0
+            ? 1
+            : Model.Level;
+
+    var xpPerLevel = 100;
+
+    var currentLevelXp =
+        points % xpPerLevel;
+
+    var xpPercentage =
+        currentLevelXp;
+}
+
+
+<div class="sq-profile">
+
+    <!-- PROFILE HEADER-->
+
+    <section class="sq-profile-header">
+
+        <div class="sq-profile-avatar">
+
+            @if (!string.IsNullOrWhiteSpace(Model.ProfileImageUrl))
+            {
+                <img src="@Model.ProfileImageUrl"
+                     alt="@Model.UserName" />
+            }
+            else
+            {
+                <span>
+                    @firstLetter
+                </span>
+            }
+
+        </div>
+
+
+        <div class="sq-profile-main">
+
+            <div class="sq-profile-top">
+
+                <div class="sq-profile-username-row">
+
+                    <h1>
+                        @Model.UserName
+                    </h1>
+
+                </div>
+
+
+                <div class="sq-profile-actions">
+
+                    @if (isOwnProfile)
+                    {
+                        <a asp-controller="QuestCompletion"
+                           asp-action="MyCompletions"
+                           class="sq-button sq-button-secondary">
+                            My Completions
+                        </a>
+
+                        <a asp-controller="Home"
+                           asp-action="EditProfile"
+                           class="sq-button sq-button-primary">
+                            Edit profile
+                        </a>
+
+                        <form asp-controller="Home"
+                              asp-action="TogglePrivacy"
+                              method="post"
+                              style="display:inline;">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="sq-profile-settings-button">
+
+                                @(Model.IsPrivate
+                                    ? "Make profile public"
+                                    : "Make profile private")
+
+                            </button>
+
+                        </form>
+                    }
+                    else
+                    {
+                        @if (friendshipStatus == "Accepted")
+                        {
+                            <span class="sq-status-approved">
+                                Friends
+                            </span>
+
+                            @if (friendshipId != null)
+                            {
+                                <form asp-controller="Friends"
+                                      asp-action="Remove"
+                                      method="post"
+                                      class="remove-friend-form"
+                                      data-friendship-id="@friendshipId">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden" name="id" value="@friendshipId" />
+
+                                    <button type="submit" class="sq-button sq-button-secondary">
+                                        Remove friend
+                                    </button>
+
+                                </form>
+                            }
+                        }
+                        else if (friendshipStatus == "PendingSent")
+                        {
+                            <form asp-controller="Friends"
+                                  asp-action="CancelRequest"
+                                  method="post"
+                                  style="display:inline;">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="username"
+                                       value="@Model.UserName" />
+
+                                <button type="submit"
+                                        class="sq-button sq-button-secondary">
+                                    Cancel request
+                                </button>
+
+                            </form>
+                        }
+                        else if (friendshipStatus == "PendingReceived")
+                        {
+                            @if (friendshipId != null)
+                            {
+                                <form asp-controller="Friends"
+                                      asp-action="Accept"
+                                      method="post"
+                                      style="display:inline;">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@friendshipId" />
+
+                                    <button type="submit"
+                                            class="sq-button sq-button-primary">
+                                        Accept request
+                                    </button>
+
+                                </form>
+
+                                <form asp-controller="Friends"
+                                      asp-action="Reject"
+                                      method="post"
+                                      style="display:inline;">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@friendshipId" />
+
+                                    <button type="submit"
+                                            class="sq-button sq-button-secondary">
+                                        Decline
+                                    </button>
+
+                                </form>
+                            }
+                        }
+                        else
+                        {
+                            <form asp-controller="Friends"
+                                  asp-action="SendRequest"
+                                  method="post"
+                                  style="display:inline;">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="username"
+                                       value="@Model.UserName" />
+
+                                <button type="submit"
+                                        class="sq-button sq-button-primary">
+                                    Add friend
+                                </button>
+
+                            </form>
+                        }
+                    }
+
+                </div>
+
+            </div>
+
+
+            @if (!string.IsNullOrWhiteSpace(Model.Bio))
+            {
+                <p class="sq-profile-bio">
+                    @Model.Bio
+                </p>
+            }
+            else
+            {
+                <p class="sq-profile-bio sq-profile-empty">
+                    No bio yet.
+                </p>
+            }
+
+
+            <div class="sq-profile-stats">
+
+                <div>
+                    <strong>
+                        @Model.Points
+                    </strong>
+
+                    <span>
+                        Points
+                    </span>
+                </div>
+
+                <div>
+                    <strong>
+                        @completions.Count
+                    </strong>
+
+                    <span>
+                        Quests
+                    </span>
+                </div>
+
+                <div>
+                    <strong>
+                        @friends.Count
+                    </strong>
+
+                    <span>
+                        Friends
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LEVEL-->
+
+    <div class="sq-profile-info-grid">
+
+        <div class="sq-profile-info-card">
+
+            <div class="sq-profile-info-label">
+                LEVEL &amp; PTS
+            </div>
+
+            <div class="sq-profile-level-row">
+
+                <div class="sq-profile-level">
+                    @level
+                </div>
+
+                <div class="sq-profile-xp">
+
+                    <div class="sq-profile-xp-header">
+
+                        <span>
+                            @points PTS
+                        </span>
+
+                        <span>
+                            Next level
+                        </span>
+
+                    </div>
+
+                    <div class="sq-profile-progress">
+
+                        <div class="sq-profile-progress-fill"
+                             style="width:@xpPercentage%;">
+                        </div>
+
+                    </div>
+
+                    <span class="sq-profile-progress-text">
+                        @currentLevelXp / @xpPerLevel XP to level @(level + 1)
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- BADGES-->
+
+    <section class="sq-profile-section">
+
+        <div class="sq-profile-section-header">
+
+            <div>
+
+                <span class="sq-label">
+                    ACHIEVEMENTS
+                </span>
+
+                <h2>
+                    Badges
+                </h2>
+
+            </div>
+
+            <div class="sq-profile-section-actions">
+
+                <span>
+                    @badges.Count earned
+                </span>
+
+                <a asp-controller="Badge"
+                   asp-action="Index">
+                    View all
+                </a>
+
+            </div>
+
+        </div>
+
+
+        @if (badges.Any())
+        {
+            <div class="sq-profile-badges">
+                
+
+                @foreach (var userBadge in badges)
+                {
+                    if (userBadge.Badge == null)
+                    {
+                        continue;
+                    }
+                    
+                    var badge = userBadge.Badge;
+                    
+                    <a asp-controller="Badge"
+                       asp-action="Details"
+                       asp-route-id="@badge.Id"
+                       class="sq-profile-badge">
+
+                        <div class="sq-achievement-badge sq-achievement-earned">
+
+                            <div class="sq-achievement-badge-ring">
+
+                                <div class="sq-achievement-badge-inner">
+                                    
+                                        <img src="@badge.IconUrl"
+                                             alt="@badge.Name"
+                                             class="sq-achievement-icon" />
+
+                                </div>
+
+                            </div>
+
+                            <div class="sq-achievement-check">
+                                ✓
+                            </div>
+
+                        </div>
+
+
+                        <div class="sq-profile-badge-info">
+
+                            <strong>
+                                @badge.Name
+                            </strong>
+
+                            @if (!string.IsNullOrWhiteSpace(badge.Description))
+                            {
+                                <span>
+                                    @badge.Description
+                                </span>
+                            }
+
+                        </div>
+
+                    </a>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="sq-profile-empty-card">
+
+                <h3>
+                    No badges yet
+                </h3>
+
+                <p>
+                    Complete quests to start earning achievements.
+                </p>
+
+                <a asp-controller="Badge"
+                   asp-action="Index"
+                   class="sq-button sq-button-secondary">
+                    Explore badges
+                </a>
+
+            </div>
+        }
+
+    </section>
+
+
+    <!-- FRIENDS-->
+
+    <section class="sq-profile-section">
+
+        <div class="sq-profile-section-header">
+
+            <div>
+
+                <span class="sq-label">
+                    SOCIAL
+                </span>
+
+                <h2>
+                    Friends
+                </h2>
+
+            </div>
+
+            <div class="sq-profile-section-actions">
+
+                <span>
+                    @friends.Count
+                </span>
+
+                <a asp-controller="Friends"
+                   asp-action="Index">
+                    Find friends
+                </a>
+
+            </div>
+
+        </div>
+
+
+        @if (friends.Any())
+        {
+            <div class="sq-profile-friends">
+
+                @foreach (var friend in friends)
+                {
+                    var friendLetter =
+                        !string.IsNullOrWhiteSpace(friend.UserName)
+                            ? friend.UserName.Substring(0, 1).ToUpper()
+                            : "U";
+
+                    <a href="@Url.Action(
+                                 "Profile",
+                                 "Home",
+                                 new { username = friend.UserName })"
+                       class="sq-profile-friend">
+
+                        <div class="sq-profile-friend-avatar">
+
+                            @if (!string.IsNullOrWhiteSpace(friend.ProfileImageUrl))
+                            {
+                                <img src="@friend.ProfileImageUrl"
+                                     alt="@friend.UserName" />
+                            }
+                            else
+                            {
+                                <span>
+                                    @friendLetter
+                                </span>
+                            }
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                @friend.UserName
+                            </strong>
+
+                            <span>
+                                Level @friend.Level
+                            </span>
+
+                        </div>
+
+                    </a>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="sq-profile-empty-card">
+
+                <h3>
+                    No friends yet
+                </h3>
+
+                <p>
+                    Add friends to see their SideQuest activity.
+                </p>
+
+                <a asp-controller="Friends"
+                   asp-action="Index"
+                   class="sq-button sq-button-primary">
+                    Find friends
+                </a>
+
+            </div>
+        }
+
+    </section>
+
+
+ 
+    <!-- COMPLETED QUESTS-->
+
+    <section class="sq-profile-section">
+
+        <div class="sq-profile-section-header">
+
+            <div>
+                <span class="sq-label">
+                    SIDEQUEST LOG
+                </span>
+
+                <h2>
+                    Completed quests
+                </h2>
+            </div>
+
+            <div class="sq-profile-section-actions">
+
+                <span>
+                    @completions.Count
+                </span>
+
+                @if (isOwnProfile)
+                {
+                    <a asp-controller="QuestCompletion"
+                       asp-action="MyCompletions"
+                       class="sq-profile-history-link">
+                        View all
+                    </a>
+                }
+
+            </div>
+
+        </div>
+
+
+        @if (completions.Any())
+        {
+            <div class="sq-profile-post-grid">
+
+                @foreach (var completion in completions)
+                {
+                    var questTitle =
+                        completion.Quest?.Title ?? "Completed quest";
+
+                    var categoryName =
+                        completion.Quest?.Category?.Name ?? "Quest";
+
+                    var difficulty =
+                        completion.Quest?.Difficulty.ToString() ?? "";
+
+                    var pointsReward =
+                        completion.Quest?.PointsReward ?? 0;
+
+                    var completedDate =
+                        completion.SubmittedAt
+                            .ToLocalTime()
+                            .ToString("dd MMM yyyy");
+
+                    <button type="button"
+                            class="sq-profile-post sq-profile-post-button"
+                            data-quest-modal="@completion.Id">
+
+                        <!-- IMAGE -->
+
+                        <div class="sq-profile-post-image">
+
+                            @if (!string.IsNullOrWhiteSpace(completion.PhotoUrl))
+                            {
+                                <img src="@completion.PhotoUrl"
+                                     alt="@questTitle" />
+                            }
+                            else
+                            {
+                                <div class="sq-profile-post-no-image">
+                                    <span>SideQuest</span>
+                                </div>
+                            }
+
+
+                            <!-- HOVER OVERLAY -->
+
+                            <div class="sq-profile-post-overlay">
+
+                                <span class="sq-profile-post-overlay-title">
+                                    @questTitle
+                                </span>
+
+                                @if (pointsReward > 0)
+                                {
+                                    <span class="sq-profile-post-overlay-points">
+                                        +@pointsReward XP
+                                    </span>
+                                }
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- POST CONTENT -->
+
+                        <div class="sq-profile-post-content">
+
+                            <div class="sq-profile-post-meta">
+
+                                <strong>
+                                    @categoryName
+                                </strong>
+
+                                <span>
+                                    @completedDate
+                                </span>
+
+                            </div>
+
+
+                            <h3 class="sq-profile-post-title">
+                                @questTitle
+                            </h3>
+
+
+                            @if (!string.IsNullOrWhiteSpace(completion.Caption))
+                            {
+                                <p class="sq-profile-post-caption">
+                                    @completion.Caption
+                                </p>
+                            }
+
+
+                            <div class="sq-profile-post-footer">
+
+                                <span>
+                                    View quest
+                                </span>
+
+                                @if (pointsReward > 0)
+                                {
+                                    <strong>
+                                        +@pointsReward PTS
+                                    </strong>
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </button>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="sq-profile-empty-card">
+
+                <h3>
+                    No completed quests yet
+                </h3>
+
+                <p>
+                    Complete a SideQuest and your adventure will appear here.
+                </p>
+
+                @if (isOwnProfile)
+                {
+                    <a asp-controller="Quest"
+                       asp-action="Index"
+                       class="sq-button sq-button-primary">
+                        Explore quests
+                    </a>
+                }
+
+            </div>
+        }
+
+    </section>
+
+
+    <!-- QUEST MODALS-->
+
+    @foreach (var completion in completions)
+    {
+        var questTitle =
+            completion.Quest?.Title ?? "Completed quest";
+
+        var categoryName =
+            completion.Quest?.Category?.Name ?? "Quest";
+
+        var difficulty =
+            completion.Quest?.Difficulty.ToString() ?? "";
+
+        var pointsReward =
+            completion.Quest?.PointsReward ?? 0;
+
+        var completedDate =
+            completion.SubmittedAt
+                .ToLocalTime()
+                .ToString("dd MMM yyyy");
+
+        <div class="sq-quest-modal"
+             id="questModal-@completion.Id"
+             aria-hidden="true">
+
+            <div class="sq-quest-modal-backdrop"
+                 data-close-quest-modal>
+            </div>
+
+
+            <div class="sq-quest-modal-content"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="quest-modal-title-@completion.Id">
+
+
+                <!-- CLOSE -->
+
+                <button type="button"
+                        class="sq-quest-modal-close"
+                        data-close-quest-modal
+                        aria-label="Close">
+                    ×
+                </button>
+
+
+                <!-- IMAGE -->
+
+                @if (!string.IsNullOrWhiteSpace(completion.PhotoUrl))
+                {
+                    <div class="sq-quest-modal-image">
+
+                        <img src="@completion.PhotoUrl"
+                             alt="@questTitle" />
+
+                    </div>
+                }
+
+
+                <!-- CONTENT -->
+
+                <div class="sq-quest-modal-body">
+
+                    <span class="sq-section-eyebrow">
+                        COMPLETED QUEST
+                    </span>
+
+
+                    <h2 id="quest-modal-title-@completion.Id">
+                        @questTitle
+                    </h2>
+
+
+                    <div class="sq-quest-modal-meta">
+
+                        @if (!string.IsNullOrWhiteSpace(categoryName))
+                        {
+                            <span>
+                                @categoryName
+                            </span>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(difficulty))
+                        {
+                            <span>
+                                @difficulty
+                            </span>
+                        }
+
+                        @if (pointsReward > 0)
+                        {
+                            <strong>
+                                +@pointsReward PTS
+                            </strong>
+                        }
+
+                    </div>
+
+
+                    @if (completion.Quest != null &&
+                         !string.IsNullOrWhiteSpace(completion.Quest.Description))
+                    {
+                        <p class="sq-quest-modal-description">
+                            @completion.Quest.Description
+                        </p>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(completion.Caption))
+                    {
+                        <div class="sq-quest-modal-caption">
+
+                            <span>
+                                YOUR NOTE
+                            </span>
+
+                            <p>
+                                @completion.Caption
+                            </p>
+
+                        </div>
+                    }
+
+
+                    <div class="sq-quest-modal-date">
+                        Completed @completedDate
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+

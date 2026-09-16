@@ -1,0 +1,301 @@
+
+@using SideQuestApp.Models
+@model IEnumerable<Quest>
+
+@{
+    ViewData["Title"] = "Quests";
+}
+
+<div class="sq-quests-page">
+
+    <section class="sq-quests-header">
+
+        <div class="sq-quests-heading">
+
+            <span class="sq-section-label">
+                SIDEQUEST BOARD
+            </span>
+
+            <h1>
+                Choose your<br />next quest.
+            </h1>
+
+            <p>
+                Real things. Real challenges. Real progress.
+                Pick something worth doing and make today count.
+            </p>
+
+        </div>
+
+
+        <a asp-controller="Category"
+           asp-action="Index"
+           class="sq-category-explore-link">
+            Explore categories
+        </a>
+
+
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Quest"
+               asp-action="Create"
+               class="sq-admin-create-quest">
+                Create a quest
+            </a>
+        }
+
+
+        <div class="sq-quests-count">
+
+            <span>
+                @Model.Count(q => q.IsActive)
+            </span>
+
+            <small>
+                active quests
+            </small>
+
+        </div>
+
+    </section>
+
+
+    <section class="sq-quest-filters">
+
+        <div class="sq-search-wrapper">
+
+            <input type="text"
+                   id="questSearch"
+                   class="sq-quest-search"
+                   placeholder="Search quests..."
+                   autocomplete="off" />
+
+        </div>
+
+
+        <div class="sq-filter-group">
+
+            <button type="button"
+                    class="sq-filter active"
+                    data-filter="all">
+                All
+            </button>
+
+            <button type="button"
+                    class="sq-filter"
+                    data-filter="Easy">
+                Easy
+            </button>
+
+            <button type="button"
+                    class="sq-filter"
+                    data-filter="Medium">
+                Medium
+            </button>
+
+            <button type="button"
+                    class="sq-filter"
+                    data-filter="Hard">
+                Hard
+            </button>
+
+        </div>
+
+
+        <div class="sq-category-filter-group">
+
+            <form asp-action="Index"
+                  method="get">
+
+                <select class="sq-category-filter"
+                        name="categoryId"
+                        onchange="this.form.submit()">
+
+                    <option value="">
+                        All categories
+                    </option>
+
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <option value="@category.Id"
+                                selected="@(ViewBag.SelectedCategoryId == category.Id)">
+                            @category.Name
+                        </option>
+                    }
+
+                </select>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <section class="sq-quest-grid"
+             id="questGrid">
+
+        @if (!Model.Any())
+        {
+            <div class="sq-empty-quests">
+
+                <span class="sq-section-label">
+                    BOARD COMPLETE
+                </span>
+
+                <h2>
+                    No active quests right now.
+                </h2>
+
+                <p>
+                    New challenges will appear here soon.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            foreach (var quest in Model)
+            {
+                var difficultyClass =
+                    quest.Difficulty.ToString().ToLower();
+
+                var completionCount =
+                    quest.Completions?
+                        .Count(c => c.Status == "Approved")
+                    ?? 0;
+
+                var isInactive =
+                    !quest.IsActive;
+
+                <article class="sq-quest-card @(isInactive ? "sq-quest-card-inactive" : "")"
+                         data-title="@quest.Title.ToLower()"
+                         data-category="@quest.Category?.Name?.ToLower()"
+                         data-difficulty="@quest.Difficulty">
+
+                    @if (isInactive)
+                    {
+                        <div class="sq-quest-inactive-card-overlay">
+
+                            <div class="sq-quest-inactive-card-content">
+
+                                <span class="sq-quest-inactive-card-label">
+                                    QUEST INACTIVE
+                                </span>
+
+                                <h3>
+                                    No longer active.
+                                </h3>
+
+                                <p>
+                                    This quest is currently unavailable.
+                                </p>
+
+                                <span class="sq-quest-inactive-card-status">
+                                    Quest deactivated
+                                </span>
+
+                            </div>
+
+                        </div>
+                    }
+
+
+                    <div class="sq-quest-card-top">
+
+                        <span class="sq-quest-category">
+                            @(quest.Category?.Name ?? "General")
+                        </span>
+
+                        <span class="sq-quest-difficulty @difficultyClass">
+                            @quest.Difficulty
+                        </span>
+
+                    </div>
+
+
+                    <div class="sq-quest-card-content">
+
+                        <h2>
+                            @quest.Title
+                        </h2>
+
+                        @if (!string.IsNullOrWhiteSpace(quest.Description))
+                        {
+                            <p>
+                                @quest.Description
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="sq-no-description">
+                                A new SideQuest awaits.
+                            </p>
+                        }
+
+                    </div>
+
+
+                    <div class="sq-quest-card-meta">
+
+                        <span>
+                            @completionCount
+                            @(completionCount == 1
+                                ? "completion"
+                                : "completions")
+                        </span>
+
+                    </div>
+
+
+                    <div class="sq-quest-card-footer">
+
+                        <div class="sq-quest-reward">
+
+                            <span class="sq-reward-number">
+                                +@quest.PointsReward
+                            </span>
+
+                            <span class="sq-reward-label">
+                                points each
+                            </span>
+
+                        </div>
+
+
+                        <a asp-controller="Quest"
+                           asp-action="Details"
+                           asp-route-id="@quest.Id"
+                           class="sq-quest-view">
+                            View quest
+                        </a>
+
+                    </div>
+
+                </article>
+            }
+        }
+
+    </section>
+
+
+    <div id="noQuestResults"
+         class="sq-no-results"
+         style="display:none;">
+
+        <span class="sq-section-label">
+            NO MATCHES
+        </span>
+
+        <h2>
+            No quests found.
+        </h2>
+
+        <p>
+            Try another search or change the difficulty filter.
+        </p>
+
+    </div>
+
+</div>
+

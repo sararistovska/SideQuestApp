@@ -1,0 +1,85 @@
+﻿@model List<SideQuestApp.Models.Notification>
+
+@{
+ViewData["Title"] = "Notifications";
+}
+
+<div class="sq-notifications-page">
+
+
+<div class="sq-notifications-header">
+    <div>
+        <span class="sq-notifications-eyebrow">SIDEQUEST</span>
+        <h1>Notifications</h1>
+        <p>Everything happening around your quests, friends and progress.</p>
+    </div>
+
+    @if (Model.Any(n => !n.IsRead))
+    {
+        <form asp-controller="Notification"
+              asp-action="MarkAllAsRead"
+              method="post">
+            @Html.AntiForgeryToken()
+
+            <button type="submit" class="sq-notifications-mark-all">
+                Mark all as read
+            </button>
+        </form>
+    }
+</div>
+
+@if (Model.Any())
+{
+    <div class="sq-notifications-list">
+
+        @foreach (var notification in Model)
+        {
+            <form asp-controller="Notification"
+                  asp-action="MarkAsRead"
+                  asp-route-id="@notification.Id"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="sq-notification-full-item @(notification.IsRead ? "" : "is-unread")">
+
+                    <span class="sq-notification-full-dot"></span>
+
+                    <span class="sq-notification-full-content">
+
+                        <strong>@notification.Title</strong>
+
+                        @if (!string.IsNullOrWhiteSpace(notification.Message))
+                        {
+                            <span>@notification.Message</span>
+                        }
+
+                        <small>
+                            @notification.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, HH:mm")
+                        </small>
+
+                    </span>
+
+                </button>
+
+            </form>
+        }
+
+    </div>
+}
+else
+{
+    <div class="sq-notifications-empty">
+
+        <span class="sq-notifications-empty-line"></span>
+
+        <h2>You're all caught up.</h2>
+
+        <p>There are no notifications to show right now.</p>
+
+    </div>
+}
+
+
+</div>

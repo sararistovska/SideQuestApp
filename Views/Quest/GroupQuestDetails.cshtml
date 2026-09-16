@@ -1,0 +1,476 @@
+﻿@model SideQuestApp.Models.Quest
+
+@{
+    ViewData["Title"] = Model.Title;
+
+    var group = ViewBag.Group as SideQuestApp.Models.Group;
+
+    var completions =
+        ViewBag.Completions as IEnumerable<SideQuestApp.Models.QuestCompletion>
+        ?? Enumerable.Empty<SideQuestApp.Models.QuestCompletion>();
+
+    var isMember =
+        ViewBag.IsMember is bool member && member;
+
+    var isCreator =
+        ViewBag.IsCreator is bool creator && creator;
+}
+
+
+<div class="sq-group-details-page">
+
+    <!-- HERO -->
+
+    <div class="sq-group-details-hero">
+
+        <div>
+
+            <a asp-controller="Group"
+               asp-action="Details"
+               asp-route-id="@Model.GroupId"
+               class="sq-back-link">
+                Back to group
+            </a>
+
+
+            <div class="sq-section-eyebrow">
+                GROUP QUEST
+            </div>
+
+
+            <h1>
+                @Model.Title
+            </h1>
+
+
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p>
+                    @Model.Description
+                </p>
+            }
+
+        </div>
+
+
+        <div class="sq-group-large-mark">
+
+            @Model.PointsReward
+
+            <span>
+                XP
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MAIN CONTENT -->
+
+    <div class="sq-group-details-main">
+
+        <div class="sq-group-details-grid">
+
+
+            <!-- LEFT COLUMN-->
+
+            <section class="sq-group-quests">
+
+                <div class="sq-section-eyebrow">
+                    QUEST
+                </div>
+
+
+                <!-- QUEST CARD -->
+
+                <div class="sq-group-quest-card">
+
+                    <div class="sq-group-quest-top">
+
+                        <div>
+
+                            <span class="sq-quest-category">
+                                GROUP QUEST
+                            </span>
+
+                        </div>
+
+
+                        <strong>
+                            @Model.PointsReward XP
+                        </strong>
+
+                    </div>
+
+
+                    <div class="sq-group-card-content">
+
+                        <h2>
+                            @Model.Title
+                        </h2>
+
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Description))
+                        {
+                            <p>
+                                @Model.Description
+                            </p>
+                        }
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ACTION -->
+
+                @if (isMember)
+                {
+                    <div class="sq-group-quest-card">
+
+                        <div class="sq-group-card-content">
+
+                            <div class="sq-section-eyebrow">
+                                READY?
+                            </div>
+
+
+                            <h2>
+                                Complete this quest
+                            </h2>
+
+
+                            <p>
+                                Complete the activity in real life and
+                                submit your proof through SideQuest.
+                            </p>
+
+                        </div>
+
+
+                        <div class="sq-group-quest-footer">
+
+                            <a asp-controller="QuestCompletion"
+                               asp-action="Create"
+                               asp-route-questId="@Model.Id"
+                               class="sq-group-card-link">
+                                Submit Quest
+                            </a>
+
+                        </div>
+
+                    </div>
+                }
+
+
+
+                <!-- GROUP ACTIVITY-->
+
+                @if (completions.Any())
+{
+    var likeCounts =
+        ViewBag.LikeCounts as Dictionary<int, int>
+        ?? new Dictionary<int, int>();
+
+    var likedByCurrentUser =
+        ViewBag.LikedByCurrentUser as HashSet<int>
+        ?? new HashSet<int>();
+
+    <div class="sq-group-submissions-section">
+
+        <div class="sq-section-eyebrow">
+            GROUP ACTIVITY
+        </div>
+
+        <div class="sq-submissions-heading">
+            <h2>
+                Made by the group
+            </h2>
+
+            <p>
+                See how other members completed this quest.
+            </p>
+        </div>
+
+
+        <div class="sq-submissions-masonry">
+
+            @foreach (var completion in completions)
+            {
+                if (completion.User == null)
+                {
+                    continue;
+                }
+
+                var username = completion.User.UserName;
+
+                var firstLetter =
+                    !string.IsNullOrWhiteSpace(username)
+                        ? username.Substring(0, 1).ToUpper()
+                        : "?";
+
+                var likeCount =
+                    likeCounts.TryGetValue(completion.Id, out var count)
+                        ? count
+                        : 0;
+
+                var isLiked =
+                    likedByCurrentUser.Contains(completion.Id);
+
+
+                <article class="sq-submission-card">
+
+
+                    @if (!string.IsNullOrWhiteSpace(completion.PhotoUrl))
+                    {
+                        <div class="sq-submission-image-wrap">
+
+                            <img src="@completion.PhotoUrl"
+                                 alt="Completion by @username"
+                                 class="sq-submission-image" />
+
+                        </div>
+                    }
+
+
+                    <div class="sq-submission-content">
+
+
+                        <div class="sq-submission-user">
+
+                            <div class="sq-submission-avatar">
+                                @firstLetter
+                            </div>
+
+
+                            <div class="sq-submission-user-info">
+
+                                <a href="/Profile/@username"
+                                   class="sq-submission-username">
+                                    @username
+                                </a>
+
+                                <span>
+                                    Completed this quest
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- LIKE -->
+
+                        <form class="sq-like-form"
+                              data-completion-id="@completion.Id">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="button"
+                                    class="sq-like-button @(isLiked ? "sq-liked" : "")"
+                                    data-liked="@isLiked.ToString().ToLower()">
+
+                                <span class="sq-like-symbol">
+                                    @(isLiked ? "♥" : "♡")
+                                </span>
+
+                                <span class="sq-like-count">
+                                    @likeCount
+                                </span>
+
+                            </button>
+
+                        </form>
+
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+
+    </div>
+}
+
+
+            </section>
+
+
+
+            <!-- RIGHT COLUMN-->
+
+            <aside>
+
+
+                <!--  QUEST INFO-->
+
+                <div class="sq-group-invite-card">
+
+                    <div class="sq-section-eyebrow">
+                        QUEST INFO
+                    </div>
+
+
+                    <h3>
+                        @Model.Title
+                    </h3>
+
+
+                    <div class="sq-group-card-meta">
+
+                        <div>
+
+                            <span>
+                                Type
+                            </span>
+
+                            <strong>
+                                Group Quest
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Reward
+                            </span>
+
+                            <strong>
+                                @Model.PointsReward XP
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CREATOR-->
+
+                @if (Model.CreatedByUser != null)
+                {
+                    <div class="sq-group-invite-card">
+
+                        <div class="sq-section-eyebrow">
+                            CREATED BY
+                        </div>
+
+
+                        <h3>
+
+                            <a href="/Profile/@Model.CreatedByUser.UserName"
+                               class="sq-member-username">
+                                @Model.CreatedByUser.UserName
+                            </a>
+
+                        </h3>
+
+
+                        <p>
+                            This member created this group quest.
+                        </p>
+
+                    </div>
+                }
+
+
+
+                <!--GROUP INFO-->
+
+                @if (group != null)
+                {
+                    <div class="sq-group-invite-card">
+
+                        <div class="sq-section-eyebrow">
+                            GROUP
+                        </div>
+
+
+                        <h3>
+                            @group.Name
+                        </h3>
+
+
+                        @if (!string.IsNullOrWhiteSpace(group.Description))
+                        {
+                            <p>
+                                @group.Description
+                            </p>
+                        }
+
+
+                        <div class="sq-empty-actions">
+
+                            <a asp-controller="Group"
+                               asp-action="Details"
+                               asp-route-id="@Model.GroupId"
+                               class="sq-group-card-link">
+                                View group
+                            </a>
+
+                        </div>
+
+                    </div>
+                }
+
+
+
+                <!--  CREATOR ACTIONS-->
+
+                @if (isCreator)
+                {
+                    <div class="sq-group-invite-card">
+
+                        <div class="sq-section-eyebrow">
+                            QUEST MANAGEMENT
+                        </div>
+
+
+                        <h3>
+                            Manage quest
+                        </h3>
+
+
+                        <p>
+                            You created this quest, so you can edit or
+                            remove it from the group.
+                        </p>
+
+
+                        <div class="sq-empty-actions">
+
+                            <a asp-controller="Group"
+                               asp-action="EditQuest"
+                               asp-route-id="@Model.Id"
+                               class="sq-group-card-link">
+                                Edit Quest
+                            </a>
+
+
+                            <a asp-controller="Group"
+                               asp-action="DeleteQuest"
+                               asp-route-id="@Model.Id"
+                               class="sq-group-card-link">
+                                Delete Quest
+                            </a>
+
+                        </div>
+
+                    </div>
+                }
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</div>

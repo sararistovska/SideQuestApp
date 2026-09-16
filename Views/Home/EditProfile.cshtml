@@ -1,0 +1,241 @@
+﻿
+@model SideQuestApp.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Edit Profile";
+
+    var firstLetter =
+        !string.IsNullOrWhiteSpace(Model.UserName)
+            ? Model.UserName.Substring(0, 1).ToUpper()
+            : "U";
+}
+
+<section class="sq-edit-profile">
+
+    <div class="sq-edit-profile-header">
+
+        <div>
+            <p class="sq-label">YOUR PROFILE</p>
+
+            <h1>Edit profile</h1>
+
+            <p>
+                Update the information people see when they visit your profile.
+            </p>
+        </div>
+
+        <a asp-controller="Home"
+           asp-action="Profile"
+           class="sq-button sq-button-secondary">
+            Back to profile
+        </a>
+
+    </div>
+
+
+    <div class="sq-edit-profile-layout">
+
+        <!-- PROFILE PREVIEW -->
+        <div class="sq-edit-preview">
+
+            <div class="sq-edit-preview-label">
+                PROFILE PREVIEW
+            </div>
+
+            <div class="sq-edit-preview-avatar">
+
+                @if (!string.IsNullOrWhiteSpace(Model.ProfileImageUrl))
+                {
+                    <img src="@Model.ProfileImageUrl"
+                         alt="@Model.UserName profile picture" />
+                }
+                else
+                {
+                    <span>@firstLetter</span>
+                }
+
+            </div>
+
+            <h2>@Model.UserName</h2>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Bio))
+            {
+                <p>@Model.Bio</p>
+            }
+            else
+            {
+                <p class="sq-edit-preview-empty">
+                    Your bio will appear here.
+                </p>
+            }
+
+            <div class="sq-edit-preview-stats">
+
+                <div>
+                    <strong>@Model.Level</strong>
+                    <span>Level</span>
+                </div>
+
+                <div>
+                    <strong>@Model.Points</strong>
+                    <span>Points</span>
+                </div>
+
+                <div>
+                    <strong>@Model.UserBadges.Count</strong>
+                    <span>Badges</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- EDIT FORM -->
+        <div class="sq-edit-profile-card">
+
+            <form asp-controller="Home"
+                  asp-action="EditProfile"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="sq-validation-summary">
+                </div>
+
+
+                <!-- USERNAME -->
+                <div class="sq-form-group">
+
+                    <label for="userName">
+                        Username
+                    </label>
+
+                    <input type="text"
+                           id="userName"
+                           name="userName"
+                           value="@Model.UserName"
+                           maxlength="50"
+                           autocomplete="username" />
+
+                    <span asp-validation-for="UserName"
+                          class="sq-validation-message">
+                    </span>
+
+                    <small>
+                        Your username is visible to other SideQuest players.
+                    </small>
+
+                </div>
+
+
+                <!-- BIO -->
+                <div class="sq-form-group">
+
+                    <label for="bio">
+                        Bio
+                    </label>
+
+                    <textarea id="bio"
+                              name="bio"
+                              rows="5"
+                              maxlength="250"
+                              placeholder="Tell people a little about yourself...">@Model.Bio</textarea>
+
+                    <small>
+                        Keep it short and make it yours.
+                    </small>
+
+                </div>
+
+
+                <!-- PROFILE IMAGE -->
+                <div class="sq-form-group">
+
+                    <label>
+                        Profile picture
+                    </label>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.ProfileImageUrl))
+                    {
+                        <div class="sq-current-profile-image">
+
+                            <img src="@Model.ProfileImageUrl"
+                                 alt="@Model.UserName profile picture" />
+
+                        </div>
+                    }
+
+                    <label for="profileImage"
+                           class="sq-upload-box">
+
+                        <div class="sq-upload-icon">
+                            +
+                        </div>
+
+                        <div class="sq-upload-content">
+
+                            <strong id="sq-profile-file-name">
+                                @(string.IsNullOrWhiteSpace(Model.ProfileImageUrl)
+                                    ? "Choose a profile picture"
+                                    : "Choose a new profile picture")
+                            </strong>
+
+                            <span id="sq-profile-file-hint">
+                                JPG, JPEG, PNG or WEBP · max 10 MB
+                            </span>
+
+                        </div>
+
+                        <span class="sq-upload-action">
+                            Browse
+                        </span>
+
+                    </label>
+
+                    <input type="file"
+                           name="profileImage"
+                           id="profileImage"
+                           accept=".jpg,.jpeg,.png,.webp"
+                           class="sq-upload-input" />
+
+                    <small>
+                        Upload a new image only if you want to replace your current picture.
+                    </small>
+
+                </div>
+                
+                <!-- ACTIONS -->
+                <div class="sq-edit-actions">
+
+                    <a asp-controller="Home"
+                       asp-action="Profile"
+                       class="sq-button sq-button-secondary">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                            class="sq-button sq-button-primary">
+                        Save changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

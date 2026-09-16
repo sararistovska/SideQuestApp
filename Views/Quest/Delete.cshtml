@@ -1,0 +1,79 @@
+@model SideQuestApp.Models.Quest
+
+@{
+    ViewData["Title"] = "Delete Quest";
+}
+
+<div class="sq-admin-form-page sq-delete-page">
+
+    
+    <div class="sq-delete-card">
+
+        <span class="sq-admin-eyebrow">ADMIN / DANGER ZONE</span>
+
+        <div class="sq-delete-icon">
+            ×
+        </div>
+
+        <h1>Delete this quest?</h1>
+
+        <p class="sq-delete-description">
+            You are about to permanently delete
+            <strong>@Model.Title</strong>.
+            This action cannot be undone.
+        </p>
+
+        <div class="sq-delete-details">
+
+            <div>
+                <span>Category</span>
+                <strong>@Model.Category?.Name</strong>
+            </div>
+
+            <div>
+                <span>Difficulty</span>
+                <strong>@Model.Difficulty</strong>
+            </div>
+
+            <div>
+                <span>Reward</span>
+                <strong>@Model.PointsReward PTS</strong>
+            </div>
+            
+
+        </div>
+
+        <div class="sq-delete-warning">
+            <strong>Before you continue</strong>
+            <p>
+                This quest cannot be deleted if it 
+                has existing completion records connected to it.
+            </p>
+        </div>
+
+        <form asp-action="Delete"
+              method="post"
+              class="sq-delete-actions">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden"
+                   asp-for="Id" />
+
+            <a asp-action="Details"
+               asp-route-id="@Model.Id"
+               class="sq-button sq-button-secondary">
+                Keep quest
+            </a>
+
+            <button type="submit"
+                    class="sq-button sq-button-danger">
+                Delete permanently
+            </button>
+
+        </form>
+
+    </div>
+    
+
+</div>

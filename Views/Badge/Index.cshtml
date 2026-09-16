@@ -1,0 +1,262 @@
+@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Badges";
+
+    int badgeNumber = 0;
+}
+
+<div class="sq-achievements-page">
+
+    <!-- HEADER -->
+    <div class="sq-achievements-header">
+
+        <div>
+            <span class="sq-label">ACHIEVEMENTS</span>
+
+            <h1>Your badges</h1>
+
+            <p>
+                Complete quests, reach milestones and unlock achievements.
+            </p>
+        </div>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create"
+               class="sq-achievement-admin-button">
+                Create badge
+            </a>
+        }
+
+    </div>
+
+
+    <!-- BADGE COLLECTION -->
+    <div class="sq-achievement-collection">
+
+        @foreach (var item in Model)
+        {
+            var badge = item.Badge;
+
+            var currentProgress = (int)item.CurrentProgress;
+            var requiredCount = (int)item.RequiredCount;
+            var isEarned = (bool)item.IsEarned;
+            var remaining = (int)item.Remaining;
+            var progressPercentage = (double)item.ProgressPercentage;
+
+            badgeNumber++;
+
+            string placeholderSymbol;
+
+            switch (badgeNumber % 8)
+            {
+                case 1:
+                    placeholderSymbol = "01";
+                    break;
+
+                case 2:
+                    placeholderSymbol = "02";
+                    break;
+
+                case 3:
+                    placeholderSymbol = "03";
+                    break;
+
+                case 4:
+                    placeholderSymbol = "04";
+                    break;
+
+                case 5:
+                    placeholderSymbol = "05";
+                    break;
+
+                case 6:
+                    placeholderSymbol = "06";
+                    break;
+
+                case 7:
+                    placeholderSymbol = "07";
+                    break;
+
+                default:
+                    placeholderSymbol = "08";
+                    break;
+            }
+
+            <div class="sq-achievement-item">
+
+                <!-- BADGE -->
+                <a asp-action="Details"
+                   asp-route-id="@badge.Id"
+                   class="sq-achievement-badge-link">
+
+                    <div class="sq-achievement-badge
+                                @(isEarned
+                                    ? "sq-achievement-earned"
+                                    : "sq-achievement-locked")">
+
+                        <div class="sq-achievement-badge-ring">
+
+                            <div class="sq-achievement-badge-inner">
+
+                                @if (!string.IsNullOrWhiteSpace(badge.IconUrl))
+                                {
+                                    <img src="@badge.IconUrl"
+                                         alt="@badge.Name"
+                                         class="sq-achievement-icon" />
+                                }
+                                else
+                                {
+                                    <div class="sq-achievement-placeholder">
+                                        <span>@placeholderSymbol</span>
+                                    </div>
+                                }
+
+                            </div>
+
+                        </div>
+
+                        @if (isEarned)
+                        {
+                            <div class="sq-achievement-check">
+                                ✓
+                            </div>
+                        }
+
+                    </div>
+
+                </a>
+
+
+                <!-- NAME -->
+                <div class="sq-achievement-info">
+
+                    <a asp-action="Details"
+                       asp-route-id="@badge.Id"
+                       class="sq-achievement-name">
+                        @badge.Name
+                    </a>
+
+                    @if (!string.IsNullOrWhiteSpace(badge.Description))
+                    {
+                        <p class="sq-achievement-description">
+                            @badge.Description
+                        </p>
+                    }
+
+
+                    <!-- PROGRESS -->
+                    <div class="sq-achievement-progress">
+
+                        <div class="sq-achievement-progress-top">
+
+                            <span>
+                                @if (isEarned)
+                                {
+                                    <text>Completed</text>
+                                }
+                                else
+                                {
+                                    <text>Progress</text>
+                                }
+                            </span>
+
+                            <strong>
+                                @currentProgress / @requiredCount
+                            </strong>
+
+                        </div>
+
+                        <div class="sq-achievement-progress-track">
+
+                            <div class="sq-achievement-progress-fill
+                                        @(isEarned
+                                            ? "sq-achievement-progress-earned"
+                                            : "")"
+                                 style="width:@progressPercentage.ToString(
+                                     System.Globalization.CultureInfo.InvariantCulture
+                                 )%">
+                            </div>
+
+                        </div>
+
+
+                        @if (isEarned)
+                        {
+                            <div class="sq-achievement-unlocked">
+                                UNLOCKED
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="sq-achievement-remaining">
+
+                                @if (remaining == 1)
+                                {
+                                    <text>1 more to unlock</text>
+                                }
+                                else
+                                {
+                                    <text>@remaining more to unlock</text>
+                                }
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- ADMIN CONTROLS -->
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="sq-achievement-admin-controls">
+
+                        <a asp-action="Edit"
+                           asp-route-id="@badge.Id">
+                            Edit
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@badge.Id"
+                           class="sq-achievement-delete">
+                            Delete
+                        </a>
+
+                    </div>
+                }
+
+            </div>
+        }
+
+    </div>
+
+
+    @if (!Model.Any())
+    {
+        <div class="sq-achievements-empty">
+
+            <div class="sq-achievements-empty-mark">
+                +
+            </div>
+
+            <h2>No badges yet</h2>
+
+            <p>
+                Achievements will appear here as they are created.
+            </p>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Create"
+                   class="sq-achievement-admin-button">
+                    Create first badge
+                </a>
+            }
+
+        </div>
+    }
+
+</div>
