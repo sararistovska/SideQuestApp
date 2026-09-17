@@ -197,7 +197,9 @@ namespace SideQuestApp.Controllers
                     .Any(m => m.UserId == userId);
 
             if (!isMember)
-                return Forbid();
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             var approvedCompletions =
                 quest.Completions
@@ -251,7 +253,11 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return RedirectToPage(
+                    "/Account/Login",
+                    new { area = "Identity" });
+            }
 
             var quest = await _context.Quests
                 .Include(q => q.Category)
@@ -275,7 +281,9 @@ namespace SideQuestApp.Controllers
                         .Any(m => m.UserId == userId);
 
                 if (!isMember)
-                    return Forbid();
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
 
@@ -363,7 +371,11 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return RedirectToPage(
+                    "/Account/Login",
+                    new { area = "Identity" });
+            }
 
             var quest = await _context.Quests
                 .Include(q => q.Category)
@@ -387,7 +399,9 @@ namespace SideQuestApp.Controllers
                         .Any(m => m.UserId == userId);
 
                 if (!isMember)
-                    return Forbid();
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
 

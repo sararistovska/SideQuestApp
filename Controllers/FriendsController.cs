@@ -35,7 +35,9 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
 
 
             // FRIENDSHIPS
@@ -293,7 +295,9 @@ namespace SideQuestApp.Controllers
             var currentUserId = _userManager.GetUserId(User);
 
             if (currentUserId == null)
-                return Unauthorized();
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
 
             if (string.IsNullOrWhiteSpace(username))
             {
@@ -307,7 +311,9 @@ namespace SideQuestApp.Controllers
             var requester = await _userManager.FindByIdAsync(currentUserId);
 
             if (requester == null)
-                return Unauthorized();
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
 
             var targetUser = await _userManager.FindByNameAsync(username);
 
@@ -409,7 +415,9 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Unauthorized();
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
 
             var friendship = await _context.Friendships
                 .Include(f => f.Requester)
@@ -461,7 +469,9 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Unauthorized();
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
 
             var friendship = await _context.Friendships
                 .Include(f => f.Requester)
@@ -512,7 +522,9 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Unauthorized();
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
 
             var friendship = await _context.Friendships
                 .Include(f => f.Requester)
@@ -561,7 +573,9 @@ namespace SideQuestApp.Controllers
             var currentUserId = _userManager.GetUserId(User);
 
             if (currentUserId == null)
-                return Unauthorized();
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
 
             if (string.IsNullOrWhiteSpace(username))
             {

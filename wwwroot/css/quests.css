@@ -811,25 +811,41 @@
 }
 
 .sq-toggle-field {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 18px;
+    width: 100%;
     cursor: pointer;
 }
 
 .sq-toggle-field input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    border: 0 !important;
+    background: transparent !important;
 }
 
 .sq-toggle-box {
     position: relative;
+    order: 2;
     flex: 0 0 auto;
-    width: 42px;
-    height: 23px;
-    background: #E0E1D9;
-    transition: background .2s ease;
+    width: 48px;
+    height: 26px;
+    margin-left: auto;
+    background: #D6D8CF;
+    border: 1px solid #AEB19F;
+    border-radius: 999px;
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.sq-toggle-field > span:last-child {
+    order: 1;
 }
 
 .sq-toggle-box::after {
@@ -837,18 +853,21 @@
     position: absolute;
     top: 3px;
     left: 3px;
-    width: 17px;
-    height: 17px;
-    background: #FFFFFF;
+    width: 18px;
+    height: 18px;
+    background: #F3DC99;
+    border-radius: 50%;
     transition: transform .2s ease;
 }
 
 .sq-toggle-field input:checked + .sq-toggle-box {
-    background: #7C8149;
+    background: #BF8414;
+    border-color: #BF8414;
 }
 
 .sq-toggle-field input:checked + .sq-toggle-box::after {
-    transform: translateX(19px);
+    background: #F3DC99;
+    transform: translateX(22px);
 }
 
 .sq-toggle-field strong {

@@ -32,13 +32,17 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Unauthorized();
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
 
             var currentUser = await _userManager.Users
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (currentUser == null)
-                return Unauthorized();
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
 
             var friendships = await _context.Friendships
                 .Where(f =>
@@ -107,7 +111,9 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Unauthorized();
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
 
             var completion = await _context.QuestCompletions
                 .Include(c => c.User)
@@ -136,7 +142,9 @@ namespace SideQuestApp.Controllers
                         ));
 
                 if (!friendshipExists)
-                    return Forbid();
+                {
+                    return RedirectToAction("Index", "Feed");
+                }
             }
 
             if (completion.Quest?.GroupId != null)
@@ -147,7 +155,9 @@ namespace SideQuestApp.Controllers
                         gm.UserId == userId);
 
                 if (!isMember && completion.UserId != userId)
-                    return Forbid();
+                {
+                    return RedirectToAction("Index", "Feed");
+                }
             }
 
             var existingLike = await _context.QuestCompletionLikes
@@ -240,7 +250,9 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Unauthorized();
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
 
             var like = await _context.QuestCompletionLikes
                 .FirstOrDefaultAsync(l =>

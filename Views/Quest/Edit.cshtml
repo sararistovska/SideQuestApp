@@ -233,21 +233,20 @@
                         <label class="sq-toggle-field">
 
                             <input asp-for="IsActive"
-                                   type="checkbox" />
+                                   type="checkbox"
+                                   id="IsActive" />
 
                             <span class="sq-toggle-box"></span>
 
                             <span>
-
-                                <strong>
-                                    Quest is active
+                                <strong id="questStatusText">
+                                    @(Model.IsActive ? "Quest is active" : "Quest is not active")
                                 </strong>
 
                                 <small>
                                     When enabled, users can discover
                                     and submit this quest.
                                 </small>
-
                             </span>
 
                         </label>
@@ -282,6 +281,16 @@
 
 </div>
 
+<script>
+    const toggle = document.getElementById("IsActive");
+    const statusText = document.getElementById("questStatusText");
+
+    toggle.addEventListener("change", function () {
+        statusText.textContent = this.checked
+            ? "Quest is active"
+            : "Quest is not active";
+    });
+</script>
 
 @section Scripts {
 

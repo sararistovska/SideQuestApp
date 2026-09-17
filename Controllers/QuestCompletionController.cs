@@ -202,7 +202,11 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return RedirectToPage(
+                    "/Account/Login",
+                    new { area = "Identity" });
+            }
 
             var completions =
                 await _context.QuestCompletions

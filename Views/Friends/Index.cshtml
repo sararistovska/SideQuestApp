@@ -6,8 +6,6 @@
 
 <div class="sq-friends-page">
 
-    <!-- HEADER -->
-
     <section class="sq-friends-header">
         <div>
             <span class="sq-section-eyebrow">CONNECTIONS</span>
@@ -24,9 +22,6 @@
             <span>friends</span>
         </div>
     </section>
-
-
-    <!-- SEARCH -->
 
     <section class="sq-friends-search">
 
@@ -59,9 +54,6 @@
 
     </section>
 
-
-    <!-- SEARCH RESULTS -->
-
     @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
     {
         <section class="sq-friends-section">
@@ -77,7 +69,6 @@
                 </span>
             </div>
 
-
             @if (Model.SearchResults.Any())
             {
                 <div class="sq-people-grid">
@@ -90,13 +81,12 @@
 
                                 <a asp-controller="Home"
                                    asp-action="Profile"
-                                   asp-route-id="@user.UserName"
+                                   asp-route-username="@user.UserName"
                                    class="sq-person-name">
                                     @user.UserName
                                 </a>
 
                             </div>
-
 
                             <div class="sq-person-action">
 
@@ -175,9 +165,6 @@
         </section>
     }
 
-
-    <!-- INCOMING REQUESTS -->
-
     @if (Model.IncomingRequests.Any())
     {
         <section class="sq-friends-section">
@@ -192,7 +179,6 @@
                     @Model.IncomingRequests.Count
                 </span>
             </div>
-
 
             <div class="sq-people-grid">
 
@@ -211,7 +197,7 @@
 
                             <a asp-controller="Home"
                                asp-action="Profile"
-                               asp-route-id="@requester.UserName"
+                               asp-route-username="@requester.UserName"
                                class="sq-person-name">
                                 @requester.UserName
                             </a>
@@ -221,7 +207,6 @@
                             </span>
 
                         </div>
-
 
                         <div class="sq-person-actions">
 
@@ -243,7 +228,6 @@
                                 </button>
 
                             </form>
-
 
                             <form asp-controller="Friends"
                                   asp-action="Reject"
@@ -274,9 +258,6 @@
         </section>
     }
 
-
-    <!-- SUGGESTIONS -->
-
     @if (Model.Suggestions.Any())
     {
         <section class="sq-friends-section">
@@ -290,7 +271,6 @@
 
             </div>
 
-
             <div class="sq-people-grid">
 
                 @foreach (var user in Model.Suggestions)
@@ -301,13 +281,12 @@
 
                             <a asp-controller="Home"
                                asp-action="Profile"
-                               asp-route-id="@user.UserName"
+                               asp-route-username="@user.UserName"
                                class="sq-person-name">
                                 @user.UserName
                             </a>
 
                         </div>
-
 
                         <div class="sq-person-action">
 
@@ -376,9 +355,6 @@
         </section>
     }
 
-
-    <!-- MY FRIENDS -->
-
     <section class="sq-friends-section">
 
         <div class="sq-section-heading">
@@ -394,7 +370,6 @@
 
         </div>
 
-
         @if (Model.Friends.Any())
         {
             <div class="sq-people-grid">
@@ -407,7 +382,7 @@
 
                             <a asp-controller="Home"
                                asp-action="Profile"
-                               asp-route-id="@friend.UserName"
+                               asp-route-username="@friend.UserName"
                                class="sq-person-name">
                                 @friend.UserName
                             </a>
@@ -417,7 +392,6 @@
                             </span>
 
                         </div>
-
 
                         <div class="sq-person-actions">
 
@@ -473,4 +447,3 @@
     </section>
 
 </div>
-

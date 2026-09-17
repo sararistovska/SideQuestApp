@@ -31,7 +31,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             var groups = await _context.Groups
                 .Include(g => g.Memberships)
@@ -66,7 +69,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             name = name?.Trim() ?? string.Empty;
             description = description?.Trim();
@@ -143,7 +149,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             var group = await _context.Groups
                 .Include(g => g.CreatedByUser)
@@ -162,7 +171,9 @@ namespace SideQuestApp.Controllers
                 .Any(m => m.UserId == userId);
 
             if (!isMember)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             ViewBag.CurrentUserId = userId;
 
@@ -192,7 +203,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             inviteCode =
                 inviteCode?.Trim().ToUpperInvariant()
@@ -255,7 +269,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             var group = await _context.Groups
                 .Include(g => g.Memberships)
@@ -268,7 +285,9 @@ namespace SideQuestApp.Controllers
                 .Any(m => m.UserId == userId);
 
             if (!isMember)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             ViewBag.GroupId = group.Id;
             ViewBag.GroupName = group.Name;
@@ -288,7 +307,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             var group = await _context.Groups
                 .Include(g => g.Memberships)
@@ -301,7 +323,9 @@ namespace SideQuestApp.Controllers
                 .Any(m => m.UserId == userId);
 
             if (!isMember)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             title = title?.Trim() ?? string.Empty;
             description = description?.Trim();
@@ -378,7 +402,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             var group = await _context.Groups
                 .Include(g => g.CreatedByUser)
@@ -391,7 +418,9 @@ namespace SideQuestApp.Controllers
                 return NotFound();
 
             if (group.CreatedByUserId != userId)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             return View(group);
         }
@@ -404,7 +433,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             var group = await _context.Groups
                 .Include(g => g.Memberships)
@@ -416,7 +448,9 @@ namespace SideQuestApp.Controllers
                 return NotFound();
 
             if (group.CreatedByUserId != userId)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             var hasCompletions =
                 group.Quests.Any(q =>
@@ -456,7 +490,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             var quest = await _context.Quests
                 .Include(q => q.Group)
@@ -475,10 +512,14 @@ namespace SideQuestApp.Controllers
                 .Any(m => m.UserId == userId);
 
             if (!isMember)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             if (quest.CreatedByUserId != userId)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             ViewBag.GroupId = quest.GroupId;
             ViewBag.GroupName = quest.Group.Name;
@@ -498,7 +539,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             var quest = await _context.Quests
                 .Include(q => q.Group)
@@ -517,10 +561,14 @@ namespace SideQuestApp.Controllers
                 .Any(m => m.UserId == userId);
 
             if (!isMember)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             if (quest.CreatedByUserId != userId)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             title = title?.Trim() ?? string.Empty;
             description = description?.Trim();
@@ -587,7 +635,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             var quest = await _context.Quests
                 .Include(q => q.Group)
@@ -607,10 +658,14 @@ namespace SideQuestApp.Controllers
                 .Any(m => m.UserId == userId);
 
             if (!isMember)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             if (quest.CreatedByUserId != userId)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             ViewBag.GroupId = quest.GroupId;
             ViewBag.GroupName = quest.Group.Name;
@@ -628,7 +683,10 @@ namespace SideQuestApp.Controllers
             var userId = _userManager.GetUserId(User);
 
             if (userId == null)
-                return Challenge();
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
 
             var quest = await _context.Quests
                 .Include(q => q.Group)
@@ -648,10 +706,14 @@ namespace SideQuestApp.Controllers
                 .Any(m => m.UserId == userId);
 
             if (!isMember)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             if (quest.CreatedByUserId != userId)
-                return Forbid();
+            {
+                return RedirectToAction("Index", "Group");
+            }
 
             if (quest.Completions.Any())
             {
@@ -693,4 +755,3 @@ namespace SideQuestApp.Controllers
         }
     }
 }
-
